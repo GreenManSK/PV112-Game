@@ -66,7 +66,6 @@ public class SimpleObject implements IDrawable {
 
         gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
         gl.glBindVertexArray(0);
-        //TODO color
     }
 
     @Override
