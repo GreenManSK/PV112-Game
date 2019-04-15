@@ -57,6 +57,7 @@ public class MVPCanvas {
     public void display(GL3 gl) {
         this.gl = gl;
         for (CanvasProgram program : programs) {
+            gl.glUseProgram(program.getProgram().getName());
             displayProgram(program);
         }
     }

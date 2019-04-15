@@ -8,6 +8,7 @@ import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import static com.jogamp.opengl.GL.GL_FLOAT;
@@ -28,7 +29,7 @@ public class SimpleObject implements IDrawable {
     private final IntBuffer VBO = IntBuffer.allocate(1), VAO = IntBuffer.allocate(1), EBO = IntBuffer.allocate(1);
 
     public SimpleObject(GL3 gl, float[] vertices, float[] colors) {
-        this(gl, vertices, IntStream.rangeClosed(0, vertices.length - 1).toArray(), colors);
+        this(gl, vertices, IntStream.rangeClosed(0, vertices.length/3 - 1).toArray(), colors);
     }
 
     /**
@@ -74,7 +75,7 @@ public class SimpleObject implements IDrawable {
     @Override
     public void draw(GL3 gl) {
         gl.glBindVertexArray(VAO.get(0));
-        gl.glDrawElements(GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0);
+        gl.glDrawElements(GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);
     }
 
     @Override

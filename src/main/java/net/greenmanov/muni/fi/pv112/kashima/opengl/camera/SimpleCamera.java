@@ -10,7 +10,7 @@ import org.joml.Vector3f;
  */
 public class SimpleCamera implements ICamera {
 
-    private static final Vector3f UP = new Vector3f(0,0,1);
+    private static final Vector3f UP = new Vector3f(0f,1f,0f);
 
     private Vector3f position;
     private Vector3f target;
