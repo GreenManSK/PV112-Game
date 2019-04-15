@@ -1,9 +1,10 @@
-package net.greenmanov.muni.fi.pv112.kashima.opengl;
+package net.greenmanov.muni.fi.pv112.kashima.opengl.drawable;
 
 import com.google.common.primitives.Floats;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.GLBuffers;
+import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -21,6 +22,8 @@ public class SimpleObject implements IDrawable {
     private float[] vertices;
     private int[] indices;
     private float[] colors;
+
+    private Matrix4f model;
 
     private final IntBuffer VBO = IntBuffer.allocate(1), VAO = IntBuffer.allocate(1), EBO = IntBuffer.allocate(1);
 
@@ -71,8 +74,16 @@ public class SimpleObject implements IDrawable {
     @Override
     public void draw(GL3 gl) {
         gl.glBindVertexArray(VAO.get(0));
-//        gl.glDrawArrays(GL_TRIANGLES, 0, indices.length);
         gl.glDrawElements(GL_TRIANGLES, 6, GL.GL_UNSIGNED_INT, 0);
+    }
+
+    @Override
+    public Matrix4f getModel() {
+        return model;
+    }
+
+    public void setModel(Matrix4f model) {
+        this.model = model;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package net.greenmanov.muni.fi.pv112.kashima.opengl;
+package net.greenmanov.muni.fi.pv112.kashima.opengl.program;
 
 import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.glsl.ShaderCode;

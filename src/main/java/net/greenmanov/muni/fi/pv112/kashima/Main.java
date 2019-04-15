@@ -5,13 +5,10 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
-import com.jogamp.opengl.util.GLBuffers;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.IDrawable;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.Program;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.SimpleObject;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.SimpleObject;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
