@@ -64,10 +64,12 @@ public class MVPCanvas {
 
     private void displayProgram(CanvasProgram program) {
         int viewLoc = gl.glGetUniformLocation(program.getProgram().getName(), VIEW_UNIFORM);
-        int projectLoc = gl.glGetUniformLocation(program.getProgram().getName(), PROJECTION_UNIFORM);
         gl.glUniformMatrix4fv(viewLoc, 1, false, camera.getView().get(GLBuffers.newDirectFloatBuffer(16)));
+
+        int projectLoc = gl.glGetUniformLocation(program.getProgram().getName(), PROJECTION_UNIFORM);
         Matrix4f projection = new Matrix4f().perspective((float) Math.toRadians(fov), (float) width / height, near, far);
         gl.glUniformMatrix4fv(projectLoc, 1, false, projection.get(GLBuffers.newDirectFloatBuffer(16)));
+
         program.display(gl);
     }
 

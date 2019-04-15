@@ -6,13 +6,11 @@ import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.ICamera;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.SimpleCamera;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.SimpleObject;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
 import static com.jogamp.opengl.GL.*;
 
@@ -30,6 +28,7 @@ public class Main implements GLEventListener {
     private Animator animator;
 
     private MVPCanvas canvas;
+    private MovingCamera camera;
 
     public static void main(String[] args) {
         new Main().setup();
@@ -80,9 +79,8 @@ public class Main implements GLEventListener {
         checkError(gl, "init");
     }
 
-    SimpleCamera camera;
     private void initCanvas() {
-        camera = new SimpleCamera(new Vector3f(1f,0f,1f), new Vector3f(0f,0f,0f));
+        camera = new MovingCamera();
         canvas = new MVPCanvas(camera, 45f, WIDTH, HEIGHT, 0.1f, 100f);
     }
 
@@ -161,10 +159,6 @@ public class Main implements GLEventListener {
      * Render loop
      */
     public void display(GLAutoDrawable drawable) {
-        float radius = 10.0f;
-        double time = System.nanoTime() / 1000000000.0;
-        camera.setPosition(new Vector3f((float)Math.sin(time) * radius,(float)Math.cos(time) * radius,(float)Math.cos(time) * radius));
-
         GL3 gl = drawable.getGL().getGL3();
         gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
