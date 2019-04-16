@@ -33,6 +33,9 @@ public class MovingCamera implements ICamera {
     private float mouseSensitivity;
     private float zoom;
 
+    // Listeners
+    private ZoomChangeListener zoomChangeListener;
+
     public MovingCamera() {
         this(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f), YAW, PITCH);
     }
@@ -52,23 +55,23 @@ public class MovingCamera implements ICamera {
 
     @Override
     public Matrix4f getView() {
-        return new Matrix4f().lookAt(position, new Vector3f().add(position, front), up);
+        return new Matrix4f().lookAt(position, new Vector3f(position).add(front), up);
     }
 
     public void keyboardMove(MovementDirection direction, float deltaTime) {
         float velocity = movementSpeed * deltaTime;
         switch (direction) {
             case FORWARD:
-                position.add(new Vector3f().mul(velocity, front));
+                position.add(new Vector3f(front).mul(velocity));
                 break;
             case BACKWARD:
-                position.sub(new Vector3f().mul(velocity, front));
+                position.sub(new Vector3f(front).mul(velocity));
                 break;
             case LEFT:
-                position.sub(new Vector3f().mul(velocity, right));
+                position.sub(new Vector3f(right).mul(velocity));
                 break;
             default:
-                position.add(new Vector3f().mul(velocity, right));
+                position.add(new Vector3f(right).mul(velocity));
         }
     }
 
@@ -98,15 +101,52 @@ public class MovingCamera implements ICamera {
             zoom = 1.0f;
         if (zoom >= 45.0f)
             zoom = 45.0f;
+        if (zoomChangeListener != null) {
+            zoomChangeListener.readZoom(zoom);
+        }
     }
 
     private void updateCameraVectors() {
-        front.x = (float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
-        front.y = (float) Math.sin(Math.toRadians(pitch));
-        front.z = (float) (Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
-        front = front.normalize();
+        Vector3f newFront = new Vector3f();
+        newFront.x = (float) (Math.cos(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
+        newFront.y = (float) Math.sin(Math.toRadians(pitch));
+        newFront.z = (float) (Math.sin(Math.toRadians(yaw)) * Math.cos(Math.toRadians(pitch)));
+        newFront = newFront.normalize();
 
-        right = new Vector3f().cross(front, worldUp).normalize();
-        up = new Vector3f().cross(right, front).normalize();
+        Vector3f newRight = new Vector3f(newFront).cross(worldUp).normalize();
+        Vector3f newUp = new Vector3f(newRight).cross(newFront).normalize();
+
+        front = newFront;
+        right = newRight;
+        up = newUp;
+    }
+
+    public ZoomChangeListener getZoomChangeListener() {
+        return zoomChangeListener;
+    }
+
+    public void setZoomChangeListener(ZoomChangeListener zoomChangeListener) {
+        this.zoomChangeListener = zoomChangeListener;
+    }
+
+    public float getMovementSpeed() {
+        return movementSpeed;
+    }
+
+    public void setMovementSpeed(float movementSpeed) {
+        this.movementSpeed = movementSpeed;
+    }
+
+    public float getMouseSensitivity() {
+        return mouseSensitivity;
+    }
+
+    public void setMouseSensitivity(float mouseSensitivity) {
+        this.mouseSensitivity = mouseSensitivity;
+    }
+
+    @FunctionalInterface
+    public interface ZoomChangeListener {
+        void readZoom(float zoom);
     }
 }

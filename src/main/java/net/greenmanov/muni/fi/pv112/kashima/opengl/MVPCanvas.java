@@ -112,4 +112,12 @@ public class MVPCanvas {
     public void removeProgram(CanvasProgram program) {
         programs.remove(program);
     }
+
+    public float getFov() {
+        return fov;
+    }
+
+    public void setFov(float fov) {
+        this.fov = fov;
+    }
 }

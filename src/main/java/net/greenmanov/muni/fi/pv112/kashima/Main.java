@@ -1,7 +1,6 @@
 package net.greenmanov.muni.fi.pv112.kashima;
 
-import com.jogamp.newt.event.WindowAdapter;
-import com.jogamp.newt.event.WindowEvent;
+import com.jogamp.newt.event.*;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
@@ -11,6 +10,10 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.SimpleObject;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.jogamp.opengl.GL.*;
 
@@ -21,14 +24,19 @@ import static com.jogamp.opengl.GL.*;
  */
 public class Main implements GLEventListener {
 
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+
     private static final String WINDOW_TITLE = "Project Kashima";
     private static final int WIDTH = 800, HEIGHT = 600;
 
     private GLWindow window;
     private Animator animator;
 
+    private CameraController cameraController;
     private MVPCanvas canvas;
-    private MovingCamera camera;
+
+    private double deltaTime;
+    private double lastFrame;
 
     public static void main(String[] args) {
         new Main().setup();
@@ -49,7 +57,10 @@ public class Main implements GLEventListener {
         window.setContextCreationFlags(GLContext.CTX_OPTION_DEBUG);
         window.setVisible(true);
 
+        cameraController = new CameraController();
         window.addGLEventListener(this);
+        window.addKeyListener(cameraController);
+        window.addMouseListener(cameraController);
 
         animator = new Animator(window);
         animator.setRunAsFastAsPossible(true);
@@ -80,9 +91,14 @@ public class Main implements GLEventListener {
     }
 
     private void initCanvas() {
-        camera = new MovingCamera();
+        MovingCamera camera = new MovingCamera(new Vector3f(1.0f,0.0f,1.0f), new Vector3f(0.0f,1.0f,0.0f), -90.0f, 0f);
+        camera.setMovementSpeed(5);
+        cameraController.setCamera(camera);
         canvas = new MVPCanvas(camera, 45f, WIDTH, HEIGHT, 0.1f, 100f);
+        camera.setZoomChangeListener((zoom) -> canvas.setFov(zoom));
     }
+
+    Matrix4f matrix;
 
     private void initPrograms(GL3 gl) {
         Program program = new Program(gl, "test", "main");
@@ -132,7 +148,8 @@ public class Main implements GLEventListener {
                 -0.5f,  0.5f,  0.5f,
                 -0.5f,  0.5f, -0.5f,
         }, coolColor(36));
-        rectangle.setModel(new Matrix4f());
+        matrix = new Matrix4f();
+        rectangle.setModel(matrix);
         canvasProgram.getDrawables().add(rectangle);
     }
 
@@ -159,6 +176,14 @@ public class Main implements GLEventListener {
      * Render loop
      */
     public void display(GLAutoDrawable drawable) {
+        double currentFrame = System.nanoTime() / 1000000000.0;
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        cameraController.setDeltaTime(deltaTime);
+
+        matrix.set(new Matrix4f().rotate((float) Math.toRadians(-55.0) * (float) currentFrame, 0.5f, 1.0f, 0.0f));
+
         GL3 gl = drawable.getGL().getGL3();
         gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -178,7 +203,6 @@ public class Main implements GLEventListener {
     }
 
     private void checkError(GL gl, String location) {
-
         int error = gl.glGetError();
         if (error != GL_NO_ERROR) {
             String errorString;
@@ -202,7 +226,7 @@ public class Main implements GLEventListener {
                     errorString = "UNKNOWN";
                     break;
             }
-            throw new Error("OpenGL Error(" + errorString + "): " + location);
+            LOGGER.log(Level.SEVERE, "OpenGL Error(" + errorString + "): " + location);
         }
     }
 }
