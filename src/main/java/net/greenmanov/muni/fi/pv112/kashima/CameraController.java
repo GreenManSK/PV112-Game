@@ -4,6 +4,7 @@ import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.opengl.GLWindow;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovementDirection;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
 
@@ -13,12 +14,16 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
 public class CameraController implements KeyListener, MouseListener {
+    private final GLWindow window;
+
     private MovingCamera camera;
     private boolean firstMouse = true;
     private int lastX, lastY;
     private double deltaTime;
 
-    public CameraController() {
+    public CameraController(GLWindow window) {
+        this.window = window;
+
     }
 
     public MovingCamera getCamera() {
@@ -39,6 +44,9 @@ public class CameraController implements KeyListener, MouseListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            new Thread(window::destroy).start();
+        }
         if (camera == null)
             return;
         if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -86,6 +94,7 @@ public class CameraController implements KeyListener, MouseListener {
     public void mouseMoved(MouseEvent e) {
         if (camera == null)
             return;
+
         int xpos = e.getX();
         int ypos = e.getY();
         if (firstMouse) {

@@ -12,6 +12,7 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,10 +58,16 @@ public class Main implements GLEventListener {
         window.setContextCreationFlags(GLContext.CTX_OPTION_DEBUG);
         window.setVisible(true);
 
-        cameraController = new CameraController();
+        window.setPointerVisible(false);
+        window.setFullscreen(true);
+
+        cameraController = new CameraController(window);
+
         window.addGLEventListener(this);
         window.addKeyListener(cameraController);
         window.addMouseListener(cameraController);
+
+
 
         animator = new Animator(window);
         animator.setRunAsFastAsPossible(true);
