@@ -14,6 +14,9 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
 public class CameraController implements KeyListener, MouseListener {
+
+    private static final int BORDER_LIMIT = 10;
+
     private final GLWindow window;
 
     private MovingCamera camera;
@@ -46,7 +49,10 @@ public class CameraController implements KeyListener, MouseListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             new Thread(window::destroy).start();
+        }else if (e.getKeyCode() == KeyEvent.VK_F4) {
+            window.setFullscreen(!window.isFullscreen());
         }
+
         if (camera == null)
             return;
         if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -94,7 +100,7 @@ public class CameraController implements KeyListener, MouseListener {
     public void mouseMoved(MouseEvent e) {
         if (camera == null)
             return;
-
+        
         int xpos = e.getX();
         int ypos = e.getY();
         if (firstMouse) {
@@ -109,6 +115,21 @@ public class CameraController implements KeyListener, MouseListener {
         lastY = ypos;
 
         camera.moseMove(xoffset, yoffset, true);
+        moveFromBorder();
+    }
+
+    /**
+     * Moves mouse from window border if needed
+     */
+    private void moveFromBorder() {
+        if (lastX <= BORDER_LIMIT || lastY <= BORDER_LIMIT || lastX + BORDER_LIMIT >= window.getWidth() || lastY + BORDER_LIMIT >= window.getHeight()) {
+            MovingCamera help = camera;
+            camera = null;
+            lastX = window.getWidth() / 2;
+            lastY = window.getHeight() / 2;
+            window.warpPointer(lastX, lastY);
+            camera = help;
+        }
     }
 
     @Override

@@ -57,9 +57,9 @@ public class Main implements GLEventListener {
 
         window.setContextCreationFlags(GLContext.CTX_OPTION_DEBUG);
         window.setVisible(true);
+        window.confinePointer(true);
 
         window.setPointerVisible(false);
-        window.setFullscreen(true);
 
         cameraController = new CameraController(window);
 
