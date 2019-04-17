@@ -86,6 +86,7 @@ public class Mesh implements IDrawable {
 
         if (indices != null) {
             indicesBuffer = IntBuffer.allocate(1);
+            gl.glCreateBuffers(1, indicesBuffer);
             IntBuffer data = GLBuffers.newDirectIntBuffer(indices);
             glNamedBufferStorage(gl, indicesBuffer.get(0), data.capacity() * Integer.BYTES, data, GL4.GL_DYNAMIC_STORAGE_BIT);
             gl.glVertexArrayElementBuffer(vao.get(0), indicesBuffer.get(0));

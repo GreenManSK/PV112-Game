@@ -1,17 +1,16 @@
 package net.greenmanov.muni.fi.pv112.kashima;
 
-import com.jogamp.newt.event.*;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
+import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Mesh;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.SimpleObject;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
-import net.greenmanov.muni.fi.pv112.kashima.test.Cube;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.logging.Level;
@@ -96,6 +95,8 @@ public class Main implements GLEventListener {
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_MULTISAMPLE);
 
+        Models.buildModels(gl);
+
         checkError(gl, "init");
     }
 
@@ -112,8 +113,8 @@ public class Main implements GLEventListener {
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
 
-        Mesh cube = Cube.mesh(gl);
-        canvasProgram.getDrawables().add(cube);
+        Mesh teapot = Models.TEAPOT;
+        canvasProgram.getDrawables().add(teapot);
     }
 
     /**

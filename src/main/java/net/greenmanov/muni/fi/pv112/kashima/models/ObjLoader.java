@@ -27,7 +27,7 @@ final public class ObjLoader {
      * Loads data from resource on given path and creates {@link Mesh} object
      * Mesh must be build before use
      */
-    public static Mesh fromResource(String path) throws IOException {
+    public static Mesh fromResource(String path) {
         try (InputStream stream = ClassLoader.getSystemResourceAsStream(path)) {
             Obj obj = ObjUtils.convertToRenderable(ObjReader.read(stream));
             Mesh mesh = new Mesh();
@@ -35,9 +35,12 @@ final public class ObjLoader {
             float[] vertices = ObjData.getVerticesArray(obj);
             float[] normals = ObjData.getNormalsArray(obj);
             float[] textureCoords = ObjData.getTexCoordsArray(obj, 2);
-
+            int[] indices = ObjData.getFaceVertexIndicesArray(obj);
             if (vertices.length != 0) {
                 mesh.addVerticies(vertices, VERTICES_POSITION);
+            }
+            if (indices.length != 0) {
+                mesh.addIndices(indices);
             }
             if (normals.length != 0) {
                 mesh.addNormals(normals, NORMALS_POSITION);
@@ -47,6 +50,8 @@ final public class ObjLoader {
             }
 
             return mesh;
+        } catch (IOException e) {
+            throw new IllegalStateException("Couldn't load .obj from resources", e);
         }
     }
 }
