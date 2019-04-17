@@ -6,9 +6,11 @@ import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Mesh;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.SimpleObject;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
+import net.greenmanov.muni.fi.pv112.kashima.test.Cube;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -56,6 +58,7 @@ public class Main implements GLEventListener {
 
         window.setContextCreationFlags(GLContext.CTX_OPTION_DEBUG);
         window.setVisible(true);
+        window.requestFocus();
         window.confinePointer(true);
 
         window.setPointerVisible(false);
@@ -104,70 +107,13 @@ public class Main implements GLEventListener {
         camera.setZoomChangeListener((zoom) -> canvas.setFov(zoom));
     }
 
-    Matrix4f matrix;
-
     private void initPrograms(GL4 gl) {
-        Program program = new Program(gl, "test", "main");
+        Program program = new Program(gl, "meshTest", "main");
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
 
-        SimpleObject rectangle = new SimpleObject(gl, new float[]{
-                -0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                0.5f,  0.5f, -0.5f,
-                0.5f,  0.5f, -0.5f,
-                -0.5f,  0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-
-                -0.5f, -0.5f,  0.5f,
-                0.5f, -0.5f,  0.5f,
-                0.5f,  0.5f,  0.5f,
-                0.5f,  0.5f,  0.5f,
-                -0.5f,  0.5f,  0.5f,
-                -0.5f, -0.5f,  0.5f,
-
-                -0.5f,  0.5f,  0.5f,
-                -0.5f,  0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-                -0.5f, -0.5f, -0.5f,
-                -0.5f, -0.5f,  0.5f,
-                -0.5f,  0.5f,  0.5f,
-
-                0.5f,  0.5f,  0.5f,
-                0.5f,  0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f,  0.5f,
-                0.5f,  0.5f,  0.5f,
-
-                -0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f, -0.5f,
-                0.5f, -0.5f,  0.5f,
-                0.5f, -0.5f,  0.5f,
-                -0.5f, -0.5f,  0.5f,
-                -0.5f, -0.5f, -0.5f,
-
-                -0.5f,  0.5f, -0.5f,
-                0.5f,  0.5f, -0.5f,
-                0.5f,  0.5f,  0.5f,
-                0.5f,  0.5f,  0.5f,
-                -0.5f,  0.5f,  0.5f,
-                -0.5f,  0.5f, -0.5f,
-        }, coolColor(36));
-        matrix = new Matrix4f();
-        rectangle.setModel(matrix);
-        canvasProgram.getDrawables().add(rectangle);
-    }
-
-    private float[] coolColor(int colors) {
-        float[] res = new float[colors * 4];
-        for (int i = 0; i < colors; i++) {
-            res[i * 4] = (float) Math.random();
-            res[i * 4 + 1] = (float) Math.random();
-            res[i * 4 + 2] = (float) Math.random();
-            res[i * 4 + 3] = 1f;
-        }
-        return res;
+        Mesh cube = Cube.mesh(gl);
+        canvasProgram.getDrawables().add(cube);
     }
 
     /**
@@ -187,8 +133,6 @@ public class Main implements GLEventListener {
         lastFrame = currentFrame;
 
         cameraController.setDeltaTime(deltaTime);
-
-        matrix.set(new Matrix4f().rotate((float) Math.toRadians(-55.0) * (float) currentFrame, 0.5f, 1.0f, 0.0f));
 
         GL4 gl = drawable.getGL().getGL4();
         gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
