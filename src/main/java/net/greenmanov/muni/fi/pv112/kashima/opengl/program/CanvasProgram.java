@@ -1,6 +1,6 @@
 package net.greenmanov.muni.fi.pv112.kashima.opengl.program;
 
-import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GL4;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public class CanvasProgram {
     /**
      * Draw all object in the program
      */
-    public void display(GL3 gl) {
+    public void display(GL4 gl) {
         gl.glUseProgram(program.getName());
         for (IDrawable obj : drawables) {
             if (beforeDrawListener != null) {
@@ -38,7 +38,7 @@ public class CanvasProgram {
     /**
      * Dispose program
      */
-    public void dispose(GL3 gl) {
+    public void dispose(GL4 gl) {
         program.dispose(gl);
     }
 

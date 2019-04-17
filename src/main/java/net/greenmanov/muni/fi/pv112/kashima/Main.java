@@ -12,7 +12,6 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +46,7 @@ public class Main implements GLEventListener {
      * Setup the window
      */
     private void setup() {
-        GLProfile glProfile = GLProfile.get(GLProfile.GL3);
+        GLProfile glProfile = GLProfile.get(GLProfile.GL4);
         GLCapabilities glCapabilities = new GLCapabilities(glProfile);
 
         window = GLWindow.create(glCapabilities);
@@ -86,7 +85,7 @@ public class Main implements GLEventListener {
      * Called at the start to initialize everything needed for rendering
      */
     public void init(GLAutoDrawable drawable) {
-        GL3 gl = drawable.getGL().getGL3();
+        GL4 gl = drawable.getGL().getGL4();
 
         initCanvas();
         initPrograms(gl);
@@ -107,7 +106,7 @@ public class Main implements GLEventListener {
 
     Matrix4f matrix;
 
-    private void initPrograms(GL3 gl) {
+    private void initPrograms(GL4 gl) {
         Program program = new Program(gl, "test", "main");
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
@@ -175,7 +174,7 @@ public class Main implements GLEventListener {
      * Called at the end to dispose of resources
      */
     public void dispose(GLAutoDrawable drawable) {
-        GL3 gl = drawable.getGL().getGL3();
+        GL4 gl = drawable.getGL().getGL4();
         canvas.dispose(gl);
     }
 
@@ -191,7 +190,7 @@ public class Main implements GLEventListener {
 
         matrix.set(new Matrix4f().rotate((float) Math.toRadians(-55.0) * (float) currentFrame, 0.5f, 1.0f, 0.0f));
 
-        GL3 gl = drawable.getGL().getGL3();
+        GL4 gl = drawable.getGL().getGL4();
         gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
@@ -204,7 +203,7 @@ public class Main implements GLEventListener {
      * Called when window is resized
      */
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        GL3 gl = drawable.getGL().getGL3();
+        GL4 gl = drawable.getGL().getGL4();
         gl.glViewport(x, y, width, height);
         canvas.reshape(gl, width, height);
     }

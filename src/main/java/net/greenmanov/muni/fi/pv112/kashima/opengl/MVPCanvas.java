@@ -1,6 +1,6 @@
 package net.greenmanov.muni.fi.pv112.kashima.opengl;
 
-import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.GLBuffers;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.ICamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
@@ -31,7 +31,7 @@ public class MVPCanvas {
     private float near;
     private float far;
 
-    private GL3 gl;
+    private GL4 gl;
 
     /**
      * Create MVPCanvas
@@ -54,7 +54,7 @@ public class MVPCanvas {
     /**
      * Render all programs in order that they were added
      */
-    public void display(GL3 gl) {
+    public void display(GL4 gl) {
         this.gl = gl;
         for (CanvasProgram program : programs) {
             gl.glUseProgram(program.getProgram().getName());
@@ -76,7 +76,7 @@ public class MVPCanvas {
     /**
      * Change projection matrix based on new window size
      */
-    public void reshape(GL3 gl, int width, int height) {
+    public void reshape(GL4 gl, int width, int height) {
         this.width = width;
         this.height = height;
     }
@@ -84,7 +84,7 @@ public class MVPCanvas {
     /**
      * Dispose of all used programs.
      */
-    public void dispose(GL3 gl) {
+    public void dispose(GL4 gl) {
         programs.forEach(p -> p.dispose(gl));
     }
 

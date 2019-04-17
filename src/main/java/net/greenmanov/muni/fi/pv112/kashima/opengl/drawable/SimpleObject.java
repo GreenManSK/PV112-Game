@@ -2,7 +2,7 @@ package net.greenmanov.muni.fi.pv112.kashima.opengl.drawable;
 
 import com.google.common.primitives.Floats;
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL3;
+import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.GLBuffers;
 import org.joml.Matrix4f;
 
@@ -28,25 +28,25 @@ public class SimpleObject implements IDrawable {
 
     private final IntBuffer VBO = IntBuffer.allocate(1), VAO = IntBuffer.allocate(1), EBO = IntBuffer.allocate(1);
 
-    public SimpleObject(GL3 gl, float[] vertices, float[] colors) {
+    public SimpleObject(GL4 gl, float[] vertices, float[] colors) {
         this(gl, vertices, IntStream.rangeClosed(0, vertices.length/3 - 1).toArray(), colors);
     }
 
     /**
      * Constructor
-     * @param gl GL3
+     * @param gl GL4
      * @param vertices Array containing vertices with xyz coordinates
      * @param indices Order of vertices to be drawn
      * @param colors Array containing RGBA for each vertex
      */
-    public SimpleObject(GL3 gl, float[] vertices, int[] indices, float[] colors) {
+    public SimpleObject(GL4 gl, float[] vertices, int[] indices, float[] colors) {
         this.vertices = vertices;
         this.indices = indices;
         this.colors = colors;
         createBuffers(gl);
     }
 
-    private void createBuffers(GL3 gl) {
+    private void createBuffers(GL4 gl) {
         gl.glGenVertexArrays(1, VAO);
         gl.glGenBuffers(1, VBO);
         gl.glGenBuffers(1, EBO);
@@ -73,7 +73,7 @@ public class SimpleObject implements IDrawable {
     }
 
     @Override
-    public void draw(GL3 gl) {
+    public void draw(GL4 gl) {
         gl.glBindVertexArray(VAO.get(0));
         gl.glDrawElements(GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);
     }
@@ -88,7 +88,7 @@ public class SimpleObject implements IDrawable {
     }
 
     @Override
-    public void dispose(GL3 gl) {
+    public void dispose(GL4 gl) {
         gl.glDeleteVertexArrays(1, VAO);
         gl.glDeleteBuffers(1, VBO);
         gl.glDeleteBuffers(1, EBO);
