@@ -8,9 +8,10 @@ import com.jogamp.opengl.util.Animator;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Mesh;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
+import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Vector3f;
 
 import java.util.logging.Level;
@@ -96,15 +97,16 @@ public class Main implements GLEventListener {
         gl.glEnable(GL.GL_MULTISAMPLE);
 
         Models.buildModels(gl);
+        Textures.setDefaultSettings(gl);
 
         checkError(gl, "init");
     }
 
     private void initCanvas() {
         MovingCamera camera = new MovingCamera(new Vector3f(1.0f,0.0f,1.0f), new Vector3f(0.0f,1.0f,0.0f), -90.0f, 0f);
-        camera.setMovementSpeed(5);
+        camera.setMovementSpeed(50);
         cameraController.setCamera(camera);
-        canvas = new MVPCanvas(camera, 45f, WIDTH, HEIGHT, 0.1f, 100f);
+        canvas = new MVPCanvas(camera, 45f, WIDTH, HEIGHT, 0.1f, 1000f);
         camera.setZoomChangeListener((zoom) -> canvas.setFov(zoom));
     }
 
@@ -113,7 +115,9 @@ public class Main implements GLEventListener {
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
 
-        Mesh teapot = Models.TEAPOT;
+        Object3D teapot = new Object3D(Models.CAT);
+        teapot.setScale(0.1f);
+        teapot.setTexture(Textures.LUKY);
         canvasProgram.getDrawables().add(teapot);
     }
 
@@ -123,6 +127,7 @@ public class Main implements GLEventListener {
     public void dispose(GLAutoDrawable drawable) {
         GL4 gl = drawable.getGL().getGL4();
         canvas.dispose(gl);
+        Textures.disposeTextures(gl);
     }
 
     /**
