@@ -2,6 +2,8 @@ package net.greenmanov.muni.fi.pv112.kashima.opengl.drawable;
 
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.texture.Texture;
+import net.greenmanov.muni.fi.pv112.kashima.materials.Material;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
 
 /**
@@ -12,6 +14,7 @@ import org.joml.Matrix4f;
 public class Object3D implements IDrawable {
 
     private Mesh mesh;
+    private Material material;
     private Matrix4f model = new Matrix4f();
     private Texture texture;
     private float scale = 1.0f;
@@ -21,12 +24,15 @@ public class Object3D implements IDrawable {
     }
 
     @Override
-    public void draw(GL4 gl) {
+    public void draw(GL4 gl, Program program) {
         if (texture != null) {
             texture.enable(gl);
             texture.bind(gl);
         }
-        mesh.draw(gl);
+        if (material != null) {
+            material.bind(gl, program);
+        }
+        mesh.draw(gl, program);
     }
 
     @Override
@@ -65,5 +71,13 @@ public class Object3D implements IDrawable {
 
     public void setTexture(Texture texture) {
         this.texture = texture;
+    }
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 }

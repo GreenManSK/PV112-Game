@@ -5,6 +5,7 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
+import net.greenmanov.muni.fi.pv112.kashima.materials.Materials;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
@@ -12,6 +13,7 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.logging.Level;
@@ -115,10 +117,18 @@ public class Main implements GLEventListener {
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
 
-        Object3D teapot = new Object3D(Models.CAT);
-        teapot.setScale(0.1f);
-        teapot.setTexture(Textures.LUKY);
-        canvasProgram.getDrawables().add(teapot);
+        Object3D cat = new Object3D(Models.CAT);
+        cat.setScale(0.1f);
+        cat.setTexture(Textures.LUKY);
+        cat.setMaterial(Materials.NONE);
+        canvasProgram.getDrawables().add(cat);
+
+        Object3D light = new Object3D(Models.TEAPOT);
+        light.setScale(0.1f);
+        light.setMaterial(Materials.SILVER);
+        light.setModel(new Matrix4f().translate(new Vector3f(5f,5f,5f)));
+        canvasProgram.getDrawables().add(light);
+
     }
 
     /**

@@ -3,6 +3,7 @@ package net.greenmanov.muni.fi.pv112.kashima.opengl.drawable;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.GLBuffers;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
 
 import java.nio.Buffer;
@@ -115,7 +116,7 @@ public class Mesh implements IDrawable {
     }
 
     @Override
-    public void draw(GL4 gl) {
+    public void draw(GL4 gl, Program program) {
         if (!build) {
             throw new IllegalStateException("Mesh not build before drawing");
         }

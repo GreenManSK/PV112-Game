@@ -145,6 +145,11 @@ public class MovingCamera implements ICamera {
         this.mouseSensitivity = mouseSensitivity;
     }
 
+    @Override
+    public Vector3f getPosition() {
+        return position;
+    }
+
     @FunctionalInterface
     public interface ZoomChangeListener {
         void readZoom(float zoom);

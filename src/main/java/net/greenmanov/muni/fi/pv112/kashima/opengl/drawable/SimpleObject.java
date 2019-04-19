@@ -4,6 +4,7 @@ import com.google.common.primitives.Floats;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.GLBuffers;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
 
 import java.nio.FloatBuffer;
@@ -73,7 +74,7 @@ public class SimpleObject implements IDrawable {
     }
 
     @Override
-    public void draw(GL4 gl) {
+    public void draw(GL4 gl, Program program) {
         gl.glBindVertexArray(VAO.get(0));
         gl.glDrawElements(GL_TRIANGLES, indices.length, GL.GL_UNSIGNED_INT, 0);
     }

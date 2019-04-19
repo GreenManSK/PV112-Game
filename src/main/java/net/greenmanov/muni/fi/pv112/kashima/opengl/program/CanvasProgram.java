@@ -31,7 +31,7 @@ public class CanvasProgram {
             if (beforeDrawListener != null) {
                 beforeDrawListener.apply(program, obj);
             }
-            obj.draw(gl);
+            obj.draw(gl, getProgram());
         }
     }
 

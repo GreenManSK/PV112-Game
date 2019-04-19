@@ -28,6 +28,7 @@ public class SimpleCamera implements ICamera {
         return new Matrix4f().lookAt(position, target, UP);
     }
 
+    @Override
     public Vector3f getPosition() {
         return position;
     }

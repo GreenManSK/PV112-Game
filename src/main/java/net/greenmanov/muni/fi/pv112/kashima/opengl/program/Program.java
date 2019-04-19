@@ -1,9 +1,12 @@
 package net.greenmanov.muni.fi.pv112.kashima.opengl.program;
 
 import com.jogamp.opengl.GL4;
+import com.jogamp.opengl.util.GLBuffers;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import net.greenmanov.muni.fi.pv112.kashima.Main;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import static com.jogamp.opengl.GL2ES2.GL_FRAGMENT_SHADER;
 import static com.jogamp.opengl.GL2ES2.GL_VERTEX_SHADER;
@@ -48,5 +51,20 @@ public class Program {
 
     public void dispose(GL4 gl) {
         gl.glDeleteProgram(program.program());
+    }
+
+    public void setUniform(GL4 gl, String name, Vector3f vector3f) {
+        int loc = gl.glGetUniformLocation(getName(), name);
+        gl.glUniform3fv(loc, 1, vector3f.get(GLBuffers.newDirectFloatBuffer(3)));
+    }
+
+    public void setUniform(GL4 gl, String name, Matrix4f matrix4f) {
+        int loc = gl.glGetUniformLocation(getName(), name);
+        gl.glUniformMatrix4fv(loc, 1, false, matrix4f.get(GLBuffers.newDirectFloatBuffer(16)));
+    }
+
+    public void setUniform(GL4 gl, String name, float number) {
+        int loc = gl.glGetUniformLocation(getName(), name);
+        gl.glUniform1f(loc, 0.6f);
     }
 }
