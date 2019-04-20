@@ -16,11 +16,13 @@ final public class Textures {
     public static final Texture BATTLESHIP_C = TextureLoader.fromResource("textures/BattleshipC.jpg");
     public static final Texture BARREL = TextureLoader.fromResource("textures/oildrum_col.jpg");
     public static final Texture ROCKET = TextureLoader.fromResource("textures/HellFire.png");
+    public static final Texture WATER = TextureLoader.fromResource("textures/water.jpg");
 
-    private static final Texture[] textures = {LUKY, KING_GEORGE_SHIP, CHENG_KUNG_FRIGATE, BATTLESHIP_C, BARREL, ROCKET};
+    private static final Texture[] textures = {LUKY, KING_GEORGE_SHIP, CHENG_KUNG_FRIGATE, BATTLESHIP_C, BARREL, ROCKET, WATER};
 
 
-    private Textures() {}
+    private Textures() {
+    }
 
     /**
      * Sets default texture settings for all textures
@@ -30,8 +32,8 @@ final public class Textures {
             gl.glGenerateTextureMipmap(texture.getTextureObject());
             texture.setTexParameteri(gl, GL4.GL_TEXTURE_MIN_FILTER, GL4.GL_LINEAR_MIPMAP_LINEAR);
             texture.setTexParameteri(gl, GL4.GL_TEXTURE_MAG_FILTER, GL4.GL_LINEAR);
-            texture.setTexParameteri(gl, GL4.GL_TEXTURE_WRAP_S, GL4.GL_MIRRORED_REPEAT);
-            texture.setTexParameteri(gl, GL4.GL_TEXTURE_WRAP_T, GL4.GL_MIRRORED_REPEAT);
+            texture.setTexParameteri(gl, GL4.GL_TEXTURE_WRAP_S, GL4.GL_REPEAT);
+            texture.setTexParameteri(gl, GL4.GL_TEXTURE_WRAP_T, GL4.GL_REPEAT);
         }
     }
 

@@ -26,6 +26,12 @@ final public class Materials {
             new Vector3f(0.7f, 0.7f, 0.7f),
             5f
     );
+    public static final Material WATER = new Material(
+            new Vector3f(0, 0, 0),
+            new Vector3f(0, 0, 0),
+            new Vector3f(0.1f, 0.1f, 0.1f),
+            2f
+    );
 
     private Materials() {
     }

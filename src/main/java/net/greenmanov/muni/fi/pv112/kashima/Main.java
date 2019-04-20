@@ -19,14 +19,6 @@ import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,39 +56,7 @@ public class Main implements GLEventListener {
 
         AffineTransform af = new AffineTransform();
         af.rotate(Math.toRadians(45), 25+45f, 25+45f);
-        bArea = bArea.createTransformedArea(af);
-
-        System.out.println("Collision:" + (aArea.intersects(bArea.getBounds()) && bArea.intersects(aArea.getBounds())));
-
-        try {
-            int width = 200, height = 200;
-
-            // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
-            // into integer pixels
-            BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-            Graphics2D ig2 = bi.createGraphics();
-
-
-//            Font font = new Font("TimesRoman", Font.BOLD, 20);
-//            ig2.setFont(font);
-//            String message = "www.java2s.com!";
-//            FontMetrics fontMetrics = ig2.getFontMetrics();
-//            int stringWidth = fontMetrics.stringWidth(message);
-//            int stringHeight = fontMetrics.getAscent();
-//            ig2.setPaint(Color.black);
-//            ig2.drawString(message, (width - stringWidth) / 2, height / 2 + stringHeight / 4);
-            ig2.setPaint(Color.black);
-            ig2.draw(aArea);
-            ig2.draw(bArea);
-
-            ImageIO.write(bi, "PNG", new File("C:\\Users\\lukas\\OneDrive\\Downloads\\3d project\\test.PNG"));
-            ImageIO.write(bi, "JPEG", new File("C:\\Users\\lukas\\OneDrive\\Downloads\\3d project\\test.JPG"));
-            //AWTTextureIO.newTexture() - Use for texturing of objects
-        } catch (IOException ie) {
-            ie.printStackTrace();
-        }*/
-
+        bArea = bArea.createTransformedArea(af);*/
         new Main().setup();
     }
 
@@ -171,7 +131,7 @@ public class Main implements GLEventListener {
 
         canvas.getLightContainer().addLight(new DirLight(
                 new Vector3f(-0.2f, -1.0f, -0.3f),
-                new Vector3f(0.2f, 0.2f, 0.2f),
+                new Vector3f(0.05f, 0.05f, 0.05f),
                 new Vector3f( 0.5f, 0.5f, 0.5f),
                 new Vector3f(1.0f, 1.0f, 1.0f)
         ));
@@ -185,7 +145,7 @@ public class Main implements GLEventListener {
                 new Vector3f( 0.5f, 0.5f, 0.5f),
                 new Vector3f(1.0f, 1.0f, 1.0f)
         );
-        canvas.getLightContainer().addLight(pointLight);
+//        canvas.getLightContainer().addLight(pointLight);
 
         spotLight = new SpotLight(
                 new Vector3f(5f, 5f, 5f),
@@ -245,6 +205,13 @@ public class Main implements GLEventListener {
         rocket.setMaterial(Materials.SILVER);
         rocket.setModel(new Matrix4f().translate(new Vector3f(3f, 0, 0)));
         canvasProgram.getDrawables().add(rocket);
+        
+        Program waterProgram = new Program(gl, "shaders", "water", "main");
+        CanvasProgram waterCanvas = new CanvasProgram(waterProgram);
+        canvas.addProgram(waterCanvas);
+
+        WaterPlane waterPlane = new WaterPlane(gl);
+        waterCanvas.getDrawables().add(waterPlane);
     }
 
     /**
@@ -267,11 +234,13 @@ public class Main implements GLEventListener {
         cameraController.setDeltaTime(deltaTime);
 
         GL4 gl = drawable.getGL().getGL4();
-        gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        gl.glClearColor(0.02f, 0.05f, 0.1f, 1.0f);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
-        spotLight.setPosition(cameraController.getCamera().getPosition());
-        spotLight.setDirection(cameraController.getCamera().getFront());
+        if (cameraController.getCamera() != null) {
+            spotLight.setPosition(cameraController.getCamera().getPosition());
+            spotLight.setDirection(cameraController.getCamera().getFront());
+        }
 
         canvas.display(gl);
         guiCanvas.display(gl);

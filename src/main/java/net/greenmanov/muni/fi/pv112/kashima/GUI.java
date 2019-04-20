@@ -8,16 +8,10 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Mesh;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
-import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Matrix4f;
 
-import javax.imageio.ImageIO;
-import javax.xml.soap.Text;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Random;
 
 /**
  * Class for rendering GUI into Object3D
@@ -89,14 +83,12 @@ public class GUI implements IDrawable {
         mesh.addVerticies(SQUARE_VERTICES, VERTICES_POSITION);
         mesh.addIndices(SQUARE_INDICES);
         mesh.addTextureCoords(TEXTURE_COORDS, TEXTURE_COORDS_POSITION);
+        mesh.build(gl);
         guiObject = new Object3D(mesh);
     }
 
     @Override
     public void draw(GL4 gl, Program program) {
-        if (!guiObject.getMesh().isBuild()) {
-            guiObject.getMesh().build(gl);
-        }
         guiObject.draw(gl, program);
     }
 
