@@ -65,6 +65,11 @@ public class Program {
 
     public void setUniform(GL4 gl, String name, float number) {
         int loc = gl.glGetUniformLocation(getName(), name);
-        gl.glUniform1f(loc, 0.6f);
+        gl.glUniform1f(loc, number);
+    }
+
+    public void setUniform(GL4 gl, String name, int number) {
+        int loc = gl.glGetUniformLocation(getName(), name);
+        gl.glUniform1i(loc, number);
     }
 }

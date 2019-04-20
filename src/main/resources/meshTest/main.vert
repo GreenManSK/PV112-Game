@@ -14,9 +14,9 @@ uniform mat4 projection;
 
 void main()
 {
-    fs_position = position;
-    fs_normal = transpose(inverse(mat3(model))) * normal;
+    fs_position = vec3(model * vec4(position, 1.0));
+    fs_normal = mat3(transpose(inverse(model))) * normal;
     fs_texture_coordinate = texture_coordinate;
 
-    gl_Position = projection * view * model * vec4(position, 1.0);
+    gl_Position = projection * view * vec4(fs_position, 1.0);
 }

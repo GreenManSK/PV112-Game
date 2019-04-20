@@ -150,6 +150,10 @@ public class MovingCamera implements ICamera {
         return position;
     }
 
+    public Vector3f getFront() {
+        return front;
+    }
+
     @FunctionalInterface
     public interface ZoomChangeListener {
         void readZoom(float zoom);

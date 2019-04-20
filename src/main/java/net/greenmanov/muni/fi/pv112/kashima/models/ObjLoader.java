@@ -44,6 +44,8 @@ final public class ObjLoader {
             }
             if (normals.length != 0) {
                 mesh.addNormals(normals, NORMALS_POSITION);
+            } else {
+                //TODO: Compute normals
             }
             if (textureCoords.length != 0) {
                 mesh.addTextureCoords(textureCoords, TEXTURE_COORDS_POSITION);

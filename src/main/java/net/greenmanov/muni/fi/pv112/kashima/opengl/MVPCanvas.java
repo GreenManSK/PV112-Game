@@ -2,6 +2,7 @@ package net.greenmanov.muni.fi.pv112.kashima.opengl;
 
 import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.util.GLBuffers;
+import net.greenmanov.muni.fi.pv112.kashima.lights.LightContainer;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.ICamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
@@ -24,6 +25,7 @@ public class MVPCanvas {
 
     private List<CanvasProgram> programs = new ArrayList<>();
     private ICamera camera;
+    private LightContainer lightContainer = new LightContainer();
 
     private float fov;
     private int width;
@@ -58,17 +60,18 @@ public class MVPCanvas {
         this.gl = gl;
         for (CanvasProgram program : programs) {
             gl.glUseProgram(program.getProgram().getName());
+            lightContainer.bind(gl, program.getProgram());
             displayProgram(program);
         }
     }
 
     private void displayProgram(CanvasProgram program) {
-        int viewLoc = gl.glGetUniformLocation(program.getProgram().getName(), VIEW_UNIFORM);
-        gl.glUniformMatrix4fv(viewLoc, 1, false, camera.getView().get(GLBuffers.newDirectFloatBuffer(16)));
+        program.getProgram().setUniform(gl, VIEW_UNIFORM, camera.getView());
 
-        int projectLoc = gl.glGetUniformLocation(program.getProgram().getName(), PROJECTION_UNIFORM);
         Matrix4f projection = new Matrix4f().perspective((float) Math.toRadians(fov), (float) width / height, near, far);
-        gl.glUniformMatrix4fv(projectLoc, 1, false, projection.get(GLBuffers.newDirectFloatBuffer(16)));
+        program.getProgram().setUniform(gl, PROJECTION_UNIFORM, projection);
+
+        program.getProgram().setUniform(gl, "viewPos", camera.getPosition());
 
         program.display(gl);
     }
@@ -86,6 +89,7 @@ public class MVPCanvas {
      */
     public void dispose(GL4 gl) {
         programs.forEach(p -> p.dispose(gl));
+        lightContainer.dispose(gl);
     }
 
     /**
@@ -119,5 +123,9 @@ public class MVPCanvas {
 
     public void setFov(float fov) {
         this.fov = fov;
+    }
+
+    public LightContainer getLightContainer() {
+        return lightContainer;
     }
 }

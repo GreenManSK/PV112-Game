@@ -5,6 +5,10 @@ import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.util.Animator;
+import net.greenmanov.muni.fi.pv112.kashima.lights.DirLight;
+import net.greenmanov.muni.fi.pv112.kashima.lights.PointLight;
+import net.greenmanov.muni.fi.pv112.kashima.lights.SpotLight;
+import net.greenmanov.muni.fi.pv112.kashima.materials.Material;
 import net.greenmanov.muni.fi.pv112.kashima.materials.Materials;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
@@ -72,7 +76,6 @@ public class Main implements GLEventListener {
         window.addMouseListener(cameraController);
 
 
-
         animator = new Animator(window);
         animator.setRunAsFastAsPossible(true);
         animator.start();
@@ -104,12 +107,46 @@ public class Main implements GLEventListener {
         checkError(gl, "init");
     }
 
+    SpotLight spotLight;
+
     private void initCanvas() {
-        MovingCamera camera = new MovingCamera(new Vector3f(1.0f,0.0f,1.0f), new Vector3f(0.0f,1.0f,0.0f), -90.0f, 0f);
+        MovingCamera camera = new MovingCamera(new Vector3f(1.0f, 0.0f, 1.0f), new Vector3f(0.0f, 1.0f, 0.0f), -90.0f, 0f);
         camera.setMovementSpeed(50);
         cameraController.setCamera(camera);
         canvas = new MVPCanvas(camera, 45f, WIDTH, HEIGHT, 0.1f, 1000f);
         camera.setZoomChangeListener((zoom) -> canvas.setFov(zoom));
+
+        canvas.getLightContainer().addLight(new DirLight(
+                new Vector3f(-0.2f, -1.0f, -0.3f),
+                new Vector3f(0.2f, 0.2f, 0.2f),
+                new Vector3f( 0.5f, 0.5f, 0.5f),
+                new Vector3f(1.0f, 1.0f, 1.0f)
+        ));
+
+        PointLight pointLight = new PointLight(
+                new Vector3f(1f, 0f, 1f),
+                1f,
+                0.09f,
+                0.032f,
+                new Vector3f(0.2f, 0.2f, 0.2f),
+                new Vector3f( 0.5f, 0.5f, 0.5f),
+                new Vector3f(1.0f, 1.0f, 1.0f)
+        );
+        canvas.getLightContainer().addLight(pointLight);
+
+        spotLight = new SpotLight(
+                new Vector3f(5f, 5f, 5f),
+                1f,
+                0.09f,
+                0.032f,
+                new Vector3f(0.2f, 0.2f, 0.2f),
+                new Vector3f( 0.5f, 0.5f, 0.5f),
+                new Vector3f(1.0f, 1.0f, 1.0f),
+                new Vector3f(1f, 0f, 1f),
+                (float) Math.cos(Math.toRadians(12.5)),
+                (float) Math.cos(Math.toRadians(17.5))
+            );
+        canvas.getLightContainer().addLight(spotLight);
     }
 
     private void initPrograms(GL4 gl) {
@@ -117,17 +154,18 @@ public class Main implements GLEventListener {
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
 
-        Object3D cat = new Object3D(Models.CAT);
-        cat.setScale(0.1f);
-        cat.setTexture(Textures.LUKY);
-        cat.setMaterial(Materials.NONE);
-        canvasProgram.getDrawables().add(cat);
-
         Object3D light = new Object3D(Models.TEAPOT);
         light.setScale(0.1f);
         light.setMaterial(Materials.SILVER);
-        light.setModel(new Matrix4f().translate(new Vector3f(5f,5f,5f)));
+        light.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
         canvasProgram.getDrawables().add(light);
+
+        Object3D cat = new Object3D(Models.CAT2);
+        cat.setScale(0.1f);
+        cat.setTexture(Textures.LUKY);
+        cat.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
+        cat.setMaterial(Materials.SILVER);
+        canvasProgram.getDrawables().add(cat);
 
     }
 
@@ -153,6 +191,9 @@ public class Main implements GLEventListener {
         GL4 gl = drawable.getGL().getGL4();
         gl.glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+
+        spotLight.setPosition(cameraController.getCamera().getPosition());
+        spotLight.setDirection(cameraController.getCamera().getFront());
 
         canvas.display(gl);
 
