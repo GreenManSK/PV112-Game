@@ -72,11 +72,6 @@ public class GUI implements IDrawable {
         ig2.drawString(message, 10, 10 + stringHeight);
 
         setTexture();
-        try {
-            ImageIO.write(image, "PNG", new File("C:\\Users\\lukas\\OneDrive\\Downloads\\3d project\\test.PNG"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void setTexture() {
