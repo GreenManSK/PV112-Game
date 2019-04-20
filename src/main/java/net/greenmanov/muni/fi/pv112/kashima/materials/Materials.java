@@ -20,6 +20,12 @@ final public class Materials {
             new Vector3f(0.508273f, 0.508273f, 0.508273f),
             0.4f
     );
+    public static final Material SHIP = new Material(
+            new Vector3f(0, 0, 0),
+            new Vector3f(0, 0, 0),
+            new Vector3f(0.7f, 0.7f, 0.7f),
+            5f
+    );
 
     private Materials() {
     }

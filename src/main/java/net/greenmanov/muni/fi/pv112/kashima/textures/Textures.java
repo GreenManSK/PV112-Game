@@ -11,8 +11,13 @@ import com.jogamp.opengl.util.texture.Texture;
 final public class Textures {
 
     public static final Texture LUKY = TextureLoader.fromResource("textures/luky.jpg");
+    public static final Texture KING_GEORGE_SHIP = TextureLoader.fromResource("textures/King_George_V.jpg");
+    public static final Texture CHENG_KUNG_FRIGATE = TextureLoader.fromResource("textures/Cheng Kung class frigate ROCS FFG 1107.jpg");
+    public static final Texture BATTLESHIP_C = TextureLoader.fromResource("textures/BattleshipC.jpg");
+    public static final Texture BARREL = TextureLoader.fromResource("textures/oildrum_col.jpg");
+    public static final Texture ROCKET = TextureLoader.fromResource("textures/HellFire.png");
 
-    private static final Texture[] textures = {LUKY};
+    private static final Texture[] textures = {LUKY, KING_GEORGE_SHIP, CHENG_KUNG_FRIGATE, BATTLESHIP_C, BARREL, ROCKET};
 
 
     private Textures() {}

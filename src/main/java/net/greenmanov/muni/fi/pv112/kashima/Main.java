@@ -154,19 +154,52 @@ public class Main implements GLEventListener {
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
 
-        Object3D light = new Object3D(Models.TEAPOT);
-        light.setScale(0.1f);
-        light.setMaterial(Materials.SILVER);
-        light.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
-        canvasProgram.getDrawables().add(light);
+//        Object3D light = new Object3D(Models.TEAPOT);
+////        light.setScale(0.1f);
+////        light.setMaterial(Materials.SILVER);
+////        light.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
+////        canvasProgram.getDrawables().add(light);
+////
+////        Object3D cat = new Object3D(Models.CAT2);
+////        cat.setScale(0.1f);
+////        cat.setTexture(Textures.LUKY);
+////        cat.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
+////        cat.setMaterial(Materials.SILVER);
+////        canvasProgram.getDrawables().add(cat);
 
-        Object3D cat = new Object3D(Models.CAT2);
-        cat.setScale(0.1f);
-        cat.setTexture(Textures.LUKY);
-        cat.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
-        cat.setMaterial(Materials.SILVER);
-        canvasProgram.getDrawables().add(cat);
+        Object3D ship1 = new Object3D(Models.KING_GORGE_SHIP);
+        ship1.setTexture(Textures.KING_GEORGE_SHIP);
+        ship1.setMaterial(Materials.SHIP);
+        ship1.setModel(new Matrix4f().rotate((float) Math.toRadians(-90.0), 1, 0, 0).translate(new Vector3f(5f, 0, 0)));
+        canvasProgram.getDrawables().add(ship1);
 
+        Object3D ship2 = new Object3D(Models.CHENG_KUNG_FRIGATE);
+        ship2.setScale(.001f);
+        ship2.setTexture(Textures.CHENG_KUNG_FRIGATE);
+        ship2.setMaterial(Materials.SHIP);
+        ship2.setModel(new Matrix4f().translate(new Vector3f(0, 0, 5f)));
+        canvasProgram.getDrawables().add(ship2);
+
+        Object3D ship3 = new Object3D(Models.BATTLESHIP_C);
+        ship3.setScale(.0001f);
+        ship3.setTexture(Textures.BATTLESHIP_C);
+        ship3.setMaterial(Materials.SHIP);
+        ship3.setModel(new Matrix4f().rotate((float) Math.toRadians(-90.0), 1, 0, 0).translate(new Vector3f(-5f, 0, 0)));
+        canvasProgram.getDrawables().add(ship3);
+
+        Object3D barrel = new Object3D(Models.BARREL);
+        barrel.setScale(.5f);
+        barrel.setTexture(Textures.BARREL);
+        barrel.setMaterial(Materials.SILVER);
+        barrel.setModel(new Matrix4f().translate(new Vector3f(-2f, 0, 0)));
+        canvasProgram.getDrawables().add(barrel);
+
+        Object3D rocket = new Object3D(Models.ROCKET);
+        rocket.setScale(.05f);
+        rocket.setTexture(Textures.ROCKET);
+        rocket.setMaterial(Materials.SILVER);
+        rocket.setModel(new Matrix4f().translate(new Vector3f(3f, 0, 0)));
+        canvasProgram.getDrawables().add(rocket);
     }
 
     /**
