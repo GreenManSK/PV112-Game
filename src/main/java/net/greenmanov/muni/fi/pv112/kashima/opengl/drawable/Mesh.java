@@ -160,4 +160,8 @@ public class Mesh implements IDrawable {
     public void setMode(int mode) {
         this.mode = mode;
     }
+
+    public boolean isBuild() {
+        return build;
+    }
 }

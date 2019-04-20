@@ -8,7 +8,6 @@ import com.jogamp.opengl.util.Animator;
 import net.greenmanov.muni.fi.pv112.kashima.lights.DirLight;
 import net.greenmanov.muni.fi.pv112.kashima.lights.PointLight;
 import net.greenmanov.muni.fi.pv112.kashima.lights.SpotLight;
-import net.greenmanov.muni.fi.pv112.kashima.materials.Material;
 import net.greenmanov.muni.fi.pv112.kashima.materials.Materials;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
@@ -20,6 +19,14 @@ import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,10 +50,53 @@ public class Main implements GLEventListener {
     private CameraController cameraController;
     private MVPCanvas canvas;
 
+    private CanvasProgram guiCanvas;
+    private GUI gui;
+
     private double deltaTime;
     private double lastFrame;
 
     public static void main(String[] args) {
+        /*Rectangle2D.Float a = new Rectangle2D.Float(0,0,50,50);
+        Rectangle2D.Float b = new Rectangle2D.Float(45f,45f,50,50);
+        Area aArea = new Area(a);
+        Area bArea = new Area(b);
+
+        AffineTransform af = new AffineTransform();
+        af.rotate(Math.toRadians(45), 25+45f, 25+45f);
+        bArea = bArea.createTransformedArea(af);
+
+        System.out.println("Collision:" + (aArea.intersects(bArea.getBounds()) && bArea.intersects(aArea.getBounds())));
+
+        try {
+            int width = 200, height = 200;
+
+            // TYPE_INT_ARGB specifies the image format: 8-bit RGBA packed
+            // into integer pixels
+            BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D ig2 = bi.createGraphics();
+
+
+//            Font font = new Font("TimesRoman", Font.BOLD, 20);
+//            ig2.setFont(font);
+//            String message = "www.java2s.com!";
+//            FontMetrics fontMetrics = ig2.getFontMetrics();
+//            int stringWidth = fontMetrics.stringWidth(message);
+//            int stringHeight = fontMetrics.getAscent();
+//            ig2.setPaint(Color.black);
+//            ig2.drawString(message, (width - stringWidth) / 2, height / 2 + stringHeight / 4);
+            ig2.setPaint(Color.black);
+            ig2.draw(aArea);
+            ig2.draw(bArea);
+
+            ImageIO.write(bi, "PNG", new File("C:\\Users\\lukas\\OneDrive\\Downloads\\3d project\\test.PNG"));
+            ImageIO.write(bi, "JPEG", new File("C:\\Users\\lukas\\OneDrive\\Downloads\\3d project\\test.JPG"));
+            //AWTTextureIO.newTexture() - Use for texturing of objects
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        }*/
+
         new Main().setup();
     }
 
@@ -101,6 +151,9 @@ public class Main implements GLEventListener {
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_MULTISAMPLE);
 
+        gl.glEnable(GL_BLEND);
+        gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         Models.buildModels(gl);
         Textures.setDefaultSettings(gl);
 
@@ -111,7 +164,7 @@ public class Main implements GLEventListener {
 
     private void initCanvas() {
         MovingCamera camera = new MovingCamera(new Vector3f(1.0f, 0.0f, 1.0f), new Vector3f(0.0f, 1.0f, 0.0f), -90.0f, 0f);
-        camera.setMovementSpeed(50);
+        camera.setMovementSpeed(20);
         cameraController.setCamera(camera);
         canvas = new MVPCanvas(camera, 45f, WIDTH, HEIGHT, 0.1f, 1000f);
         camera.setZoomChangeListener((zoom) -> canvas.setFov(zoom));
@@ -150,22 +203,14 @@ public class Main implements GLEventListener {
     }
 
     private void initPrograms(GL4 gl) {
-        Program program = new Program(gl, "meshTest", "main");
+        Program guiProgram = new Program(gl, "shaders", "gui");
+        guiCanvas = new CanvasProgram(guiProgram);
+        gui = new GUI(WIDTH, HEIGHT, gl);
+        guiCanvas.getDrawables().add(gui);
+
+        Program program = new Program(gl, "shaders", "main");
         CanvasProgram canvasProgram = new CanvasProgram(program);
         canvas.addProgram(canvasProgram);
-
-//        Object3D light = new Object3D(Models.TEAPOT);
-////        light.setScale(0.1f);
-////        light.setMaterial(Materials.SILVER);
-////        light.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
-////        canvasProgram.getDrawables().add(light);
-////
-////        Object3D cat = new Object3D(Models.CAT2);
-////        cat.setScale(0.1f);
-////        cat.setTexture(Textures.LUKY);
-////        cat.setModel(new Matrix4f().translate(new Vector3f(5f, 5f, 5f)));
-////        cat.setMaterial(Materials.SILVER);
-////        canvasProgram.getDrawables().add(cat);
 
         Object3D ship1 = new Object3D(Models.KING_GORGE_SHIP);
         ship1.setTexture(Textures.KING_GEORGE_SHIP);
@@ -229,6 +274,7 @@ public class Main implements GLEventListener {
         spotLight.setDirection(cameraController.getCamera().getFront());
 
         canvas.display(gl);
+        guiCanvas.display(gl);
 
         checkError(gl, "display");
     }
@@ -240,6 +286,8 @@ public class Main implements GLEventListener {
         GL4 gl = drawable.getGL().getGL4();
         gl.glViewport(x, y, width, height);
         canvas.reshape(gl, width, height);
+        if (gui != null)
+            gui.reshape(width, height);
     }
 
     private void checkError(GL gl, String location) {

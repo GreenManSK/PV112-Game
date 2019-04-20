@@ -78,9 +78,6 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-// Final color
-layout(location = 0) out vec4 final_color;
-
 // Lightning functions
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -88,8 +85,6 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
 
 void main()
 {
-    //FragColor = texture(texture_image, fs_texture_coordinate);
-
     // properties
     vec3 norm = normalize(fs_normal);
     vec3 viewDir = normalize(viewPos - fs_position);
