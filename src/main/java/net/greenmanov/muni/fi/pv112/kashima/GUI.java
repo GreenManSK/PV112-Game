@@ -4,6 +4,9 @@ import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
+import net.greenmanov.muni.fi.pv112.kashima.game.CollisionDetector;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.ICollisionObject;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.KingGorgeShip;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Mesh;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
@@ -11,6 +14,8 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import org.joml.Matrix4f;
 
 import java.awt.*;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**

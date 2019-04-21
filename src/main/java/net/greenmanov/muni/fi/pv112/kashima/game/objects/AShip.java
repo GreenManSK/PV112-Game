@@ -3,13 +3,18 @@ package net.greenmanov.muni.fi.pv112.kashima.game.objects;
 import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Abstract ship object
  *
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
-abstract public class AShip implements IGameObject, IDrawableObject {
+abstract public class AShip implements IGameObject, IDrawableObject, ICollisionObject {
 
     protected GameController gameController;
 
@@ -28,10 +33,11 @@ abstract public class AShip implements IGameObject, IDrawableObject {
     protected Vector3f velocity = new Vector3f();
     protected Vector3f acceleration = new Vector3f();
 
-    public AShip(GameController gameController) {
+    public AShip(float x, float y, GameController gameController) {
         this.gameController = gameController;
         setShipProperties();
         setObject3d();
+        changeCoords(x,y);
     }
 
     abstract protected void setShipProperties();
@@ -70,12 +76,36 @@ abstract public class AShip implements IGameObject, IDrawableObject {
         }
     }
 
+    public void stop() {
+        acceleration = new Vector3f();
+        velocity = new Vector3f();
+    }
+
     /**
      * Turn ship by angle
      */
     public void turn(boolean positive) {
         this.angle += (positive ? 1 : -1) * turnDelta;
         object3D.getModel().rotateZ((positive ? 1 : -1) * turnDelta);
+    }
+
+    @Override
+    public Area getCollisionArea() {
+        Vector4f coords = new Vector4f(0, 0, 0,1).mul(object3D.getModel());
+        float x = coords.x;
+        float y = coords.z;
+        Area area = new Area(new Rectangle2D.Float(
+                x - (width / 2),
+                y - (height / 2),
+                width, height));
+        AffineTransform at = new AffineTransform();
+        at.rotate(-angle, x, y);
+        return area.createTransformedArea(at);
+    }
+
+    @Override
+    public void onCollision(ICollisionObject object) {
+
     }
 
     @Override

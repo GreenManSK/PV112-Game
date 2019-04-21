@@ -15,14 +15,14 @@ import org.joml.Matrix4f;
 public class KingGorgeShip extends AShip {
 
     // TODO: Set to real values
-    public final static float MAX_SPEED = 4f;
+    public final static float MAX_SPEED = 5f;
     public final static float MAX_ACCELERATION = 1f;
     public final static float ACCELERATION_DELTA = 0.25f;
     public final static float TURN_DELTA = 0.02f;
-    public final static int WIDTH = 20, HEIGHT = 60;
+    public final static float WIDTH = 2.6f, HEIGHT = 0.3f;
 
-    public KingGorgeShip(GameController gameController) {
-        super(gameController);
+    public KingGorgeShip(float x, float y, GameController gameController) {
+        super(x, y, gameController);
     }
 
     @Override

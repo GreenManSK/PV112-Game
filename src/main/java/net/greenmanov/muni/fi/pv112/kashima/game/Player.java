@@ -1,18 +1,21 @@
 package net.greenmanov.muni.fi.pv112.kashima.game;
 
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.AShip;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.ICollisionObject;
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.IDrawableObject;
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.IGameObject;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.SimpleCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import org.joml.Vector4f;
 
+import java.awt.geom.Area;
+
 /**
  * Class Player
  *
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
-public class Player implements IGameObject, IDrawableObject {
+public class Player implements IGameObject, IDrawableObject, ICollisionObject {
 
     private GameController gameController;
     private AShip ship;
@@ -45,6 +48,16 @@ public class Player implements IGameObject, IDrawableObject {
 
         camera.getPosition().x = shipPos.x;
         camera.getPosition().z = shipPos.z;
+    }
+
+    @Override
+    public Area getCollisionArea() {
+        return ship.getCollisionArea();
+    }
+
+    @Override
+    public void onCollision(ICollisionObject object) {
+
     }
 
     public AShip getShip() {

@@ -19,12 +19,13 @@ import org.joml.Matrix4f;
 public class WaterPlane implements IDrawable {
 
     public static final float WATER_LEVEL = -1f;
+    public static final float SIZE = 100f;
 
     private static final float[] SQUARE_VERTICES = new float[]{
-            -100, -100, 0,
-            100, -100, 0,
-            100, 100, 0,
-            -100, 100, 0
+            -SIZE, -SIZE, 0,
+            SIZE, -SIZE, 0,
+            SIZE, SIZE, 0,
+            -SIZE, SIZE, 0
     };
     private static final float[] SQUARE_NORMALS = new float[]{
             0,0,1,

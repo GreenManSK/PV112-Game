@@ -8,20 +8,15 @@ import com.jogamp.opengl.GLEventListener;
 import net.greenmanov.muni.fi.pv112.kashima.GUI;
 import net.greenmanov.muni.fi.pv112.kashima.game.controls.KeyboardControls;
 import net.greenmanov.muni.fi.pv112.kashima.game.enviroment.WaterPlane;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.AShip;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.IDrawableObject;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.IGameObject;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.KingGorgeShip;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.*;
 import net.greenmanov.muni.fi.pv112.kashima.lights.DirLight;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.ICamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.SimpleCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.HashSet;
 import java.util.logging.Logger;
@@ -43,6 +38,7 @@ public class GameController implements GLEventListener {
 
     private GLWindow window;
 
+    private CollisionDetector collisionDetector;
     private HashSet<IGameObject> objects = new HashSet<>();
 
     private double deltaTime;
@@ -62,6 +58,7 @@ public class GameController implements GLEventListener {
 
     public GameController(GLWindow window) {
         this.window = window;
+        this.collisionDetector = new CollisionDetector();
     }
 
     public void addObject(IGameObject object) {
@@ -69,12 +66,18 @@ public class GameController implements GLEventListener {
         if (object instanceof IDrawableObject) {
             mainProgram.getDrawables().add(((IDrawableObject) object).getObject3D());
         }
+        if (object instanceof ICollisionObject) {
+            collisionDetector.addObject((ICollisionObject) object);
+        }
     }
 
     public void removeObject(IGameObject object) {
         objects.remove(object);
         if (object instanceof IDrawableObject) {
             mainProgram.getDrawables().remove(((IDrawableObject) object).getObject3D());
+        }
+        if (object instanceof ICollisionObject) {
+            collisionDetector.removeObject((ICollisionObject) object);
         }
     }
 
@@ -112,8 +115,10 @@ public class GameController implements GLEventListener {
     }
 
     private void prepareGameObjects() {
-        player = new Player(this, new KingGorgeShip(this), camera);
+        player = new Player(this, new KingGorgeShip(0,0,this), camera);
         addObject(player);
+        AShip ship = new KingGorgeShip(KingGorgeShip.WIDTH, 0, this);
+        addObject(ship);
     }
 
     private void prepareGui(GL4 gl) {
@@ -174,7 +179,7 @@ public class GameController implements GLEventListener {
     private void gameLoopStep(GL4 gl) {
         float deltaTime = recomputeDeltaTime();
         moveStep(deltaTime);
-        //TODO: Collisions
+        collisionDetector.detect();
         logicStep(deltaTime);
     }
 
