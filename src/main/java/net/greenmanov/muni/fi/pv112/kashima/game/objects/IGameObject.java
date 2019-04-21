@@ -11,12 +11,12 @@ public interface IGameObject {
      *
      * @param deltaTime Delta time in seconds
      */
-    void move(double deltaTime);
+    void move(float deltaTime);
 
     /**
      * Do any game logic that object have based on delta time
      *
      * @param deltaTime Delta time in seconds
      */
-    void logic(double deltaTime);
+    void logic(float deltaTime);
 }

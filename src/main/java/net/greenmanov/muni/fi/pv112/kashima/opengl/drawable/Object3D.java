@@ -42,11 +42,11 @@ public class Object3D implements IDrawable {
 
     @Override
     public Matrix4f getModel() {
-        return new Matrix4f(model).scale(scale);
+        return model;
     }
 
     public void setModel(Matrix4f model) {
-        this.model = model;
+        this.model = new Matrix4f(model).scale(scale);
     }
 
     public Mesh getMesh() {

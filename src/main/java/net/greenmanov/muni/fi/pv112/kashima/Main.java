@@ -41,7 +41,7 @@ public class Main {
         window.setContextCreationFlags(GLContext.CTX_OPTION_DEBUG);
         window.setVisible(true);
         window.requestFocus();
-        window.confinePointer(true);
+//        window.confinePointer(true);
 
         window.setPointerVisible(false);
 

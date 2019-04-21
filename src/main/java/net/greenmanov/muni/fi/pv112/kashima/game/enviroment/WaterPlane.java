@@ -1,4 +1,4 @@
-package net.greenmanov.muni.fi.pv112.kashima;
+package net.greenmanov.muni.fi.pv112.kashima.game.enviroment;
 
 import com.jogamp.opengl.GL4;
 import net.greenmanov.muni.fi.pv112.kashima.materials.Materials;
@@ -17,6 +17,8 @@ import org.joml.Matrix4f;
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
 public class WaterPlane implements IDrawable {
+
+    public static final float WATER_LEVEL = -1f;
 
     private static final float[] SQUARE_VERTICES = new float[]{
             -100, -100, 0,
@@ -58,7 +60,7 @@ public class WaterPlane implements IDrawable {
 
     @Override
     public Matrix4f getModel() {
-        return new Matrix4f().rotate((float) -Math.toRadians(90), 1, 0, 0).translate(0, 0, -1);
+        return new Matrix4f().rotate((float) -Math.toRadians(90), 1, 0, 0).translate(0, 0, WATER_LEVEL);
     }
 
     @Override

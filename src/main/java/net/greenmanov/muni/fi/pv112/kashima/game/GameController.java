@@ -7,7 +7,12 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import net.greenmanov.muni.fi.pv112.kashima.GUI;
 import net.greenmanov.muni.fi.pv112.kashima.game.controls.KeyboardControls;
+import net.greenmanov.muni.fi.pv112.kashima.game.enviroment.WaterPlane;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.AShip;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.IDrawableObject;
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.IGameObject;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.KingGorgeShip;
+import net.greenmanov.muni.fi.pv112.kashima.lights.DirLight;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.ICamera;
@@ -16,13 +21,12 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.HashSet;
 import java.util.logging.Logger;
 
-import static com.jogamp.opengl.GL.GL_BLEND;
-import static com.jogamp.opengl.GL.GL_ONE_MINUS_SRC_ALPHA;
-import static com.jogamp.opengl.GL.GL_SRC_ALPHA;
+import static com.jogamp.opengl.GL.*;
 import static net.greenmanov.muni.fi.pv112.kashima.opengl.OpenGLHelper.checkError;
 
 /**
@@ -44,23 +48,34 @@ public class GameController implements GLEventListener {
     private double deltaTime;
     private double lastFrame;
 
-    private ICamera camera;
+    private SimpleCamera camera;
     private MVPCanvas mvpCanvas;
+    private CanvasProgram mainProgram;
     private CanvasProgram guiCanvas;
+    private CanvasProgram waterCanvas;
 
     private GUI gui;
 
+    private KeyboardControls keyboardControls;
+
+    private Player player;
+
     public GameController(GLWindow window) {
         this.window = window;
-        this.window.addKeyListener(new KeyboardControls(window));
     }
 
     public void addObject(IGameObject object) {
         objects.add(object);
+        if (object instanceof IDrawableObject) {
+            mainProgram.getDrawables().add(((IDrawableObject) object).getObject3D());
+        }
     }
 
     public void removeObject(IGameObject object) {
         objects.remove(object);
+        if (object instanceof IDrawableObject) {
+            mainProgram.getDrawables().remove(((IDrawableObject) object).getObject3D());
+        }
     }
 
     @Override
@@ -69,6 +84,8 @@ public class GameController implements GLEventListener {
 
         prepareGui(gl);
         prepareMvpCanvas(gl);
+        prepareWaterCanvas(gl);
+        prepareGameObjects();
 
         // Enable depth test and multisampling
         gl.glEnable(GL.GL_DEPTH_TEST);
@@ -82,8 +99,21 @@ public class GameController implements GLEventListener {
         Models.buildModels(gl);
         Textures.setDefaultSettings(gl);
 
+        // Enable controls
+        enableControls();
+
         recomputeDeltaTime();
         checkError(LOGGER, gl, "init");
+    }
+
+    private void enableControls() {
+        keyboardControls = new KeyboardControls(window, player);
+        this.window.addKeyListener(keyboardControls);
+    }
+
+    private void prepareGameObjects() {
+        player = new Player(this, new KingGorgeShip(this), camera);
+        addObject(player);
     }
 
     private void prepareGui(GL4 gl) {
@@ -93,9 +123,29 @@ public class GameController implements GLEventListener {
         guiCanvas.getDrawables().add(gui);
     }
 
+    private void prepareWaterCanvas(GL4 gl) {
+        Program waterProgram = new Program(gl, "shaders", "water", "main");
+        waterCanvas = new CanvasProgram(waterProgram);
+        mvpCanvas.addProgram(waterCanvas);
+        WaterPlane waterPlane = new WaterPlane(gl);
+        waterCanvas.getDrawables().add(waterPlane);
+    }
+
     private void prepareMvpCanvas(GL4 gl) {
-        camera = new SimpleCamera(new Vector3f(5f, 0, 0), new Vector3f());
+        camera = new SimpleCamera(new Vector3f(0, 10f, 0), new Vector3f());
         mvpCanvas = new MVPCanvas(camera, MVP_FOV, window.getWidth(), window.getHeight(), MVP_NEAR, MVP_FAR);
+
+        Program program  = new Program(gl, "shaders", "main");
+        mainProgram = new CanvasProgram(program);
+        mvpCanvas.addProgram(mainProgram);
+
+        // TODO: Temporary
+        mvpCanvas.getLightContainer().addLight(new DirLight(
+                new Vector3f(-0.2f, -1.0f, -0.3f),
+                new Vector3f(0.05f, 0.05f, 0.05f),
+                new Vector3f( 0.5f, 0.5f, 0.5f),
+                new Vector3f(1.0f, 1.0f, 1.0f)
+        ));
     }
 
     @Override
@@ -122,7 +172,7 @@ public class GameController implements GLEventListener {
      * Do game logic
      */
     private void gameLoopStep(GL4 gl) {
-        double deltaTime = recomputeDeltaTime();
+        float deltaTime = recomputeDeltaTime();
         moveStep(deltaTime);
         //TODO: Collisions
         logicStep(deltaTime);
@@ -131,27 +181,30 @@ public class GameController implements GLEventListener {
     /**
      * Move all objects
      */
-    private void moveStep(double deltaTime) {
+    private void moveStep(float deltaTime) {
         objects.forEach(obj -> obj.move(deltaTime));
     }
 
     /**
      * Trigger logic of each object
      */
-    private void logicStep(double deltaTime) {
+    private void logicStep(float deltaTime) {
         objects.forEach(obj -> obj.logic(deltaTime));
     }
 
-    private double recomputeDeltaTime() {
+    private float recomputeDeltaTime() {
         double currentFrame = System.nanoTime() / 1000000000.0;
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        return deltaTime;
+        return (float) deltaTime;
     }
 
     @Override
     public void dispose(GLAutoDrawable drawable) {
         GL4 gl = drawable.getGL().getGL4();
+
+        mvpCanvas.dispose(gl);
+        guiCanvas.dispose(gl);
 
         checkError(LOGGER, gl, "dispose");
     }
