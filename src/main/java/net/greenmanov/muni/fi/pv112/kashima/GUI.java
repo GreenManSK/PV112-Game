@@ -155,6 +155,9 @@ public class GUI implements IDrawable {
     }
 
     private void setTexture() {
+        if (guiObject.getTexture() != null) {
+            guiObject.getTexture().destroy(gl);
+        }
         Texture texture = AWTTextureIO.newTexture(GLProfile.get(GLProfile.GL4), image, true);
         gl.glGenerateTextureMipmap(texture.getTextureObject());
         texture.setTexParameteri(gl, GL4.GL_TEXTURE_MIN_FILTER, GL4.GL_LINEAR_MIPMAP_LINEAR);
