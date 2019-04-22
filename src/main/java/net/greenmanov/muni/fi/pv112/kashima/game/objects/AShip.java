@@ -2,6 +2,8 @@ package net.greenmanov.muni.fi.pv112.kashima.game.objects;
 
 import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
 import net.greenmanov.muni.fi.pv112.kashima.game.Player;
+import net.greenmanov.muni.fi.pv112.kashima.lights.PointLight;
+import net.greenmanov.muni.fi.pv112.kashima.lights.SpotLight;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -20,6 +22,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     protected GameController gameController;
 
     protected Object3D object3D;
+    protected SpotLight light;
 
     // Properties
     protected float width, height;
@@ -39,11 +42,28 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
         this.gameController = gameController;
         setShipProperties();
         setObject3d();
+        addLight();
         changeCoords(x,y);
     }
 
     abstract protected void setShipProperties();
     abstract protected void setObject3d();
+
+    protected void addLight() {
+        light = new SpotLight(
+                new Vector3f(0, 0, 0),
+                1f,
+                0.09f,
+                0.032f,
+                new Vector3f(0.2f, 0.2f, 0.2f),
+                new Vector3f( 0.5f, 0.5f, 0.5f),
+                new Vector3f(1.0f, 1.0f, 1.0f),
+                new Vector3f(1f, 0f, 0f),
+                (float) Math.cos(Math.toRadians(12.5)),
+                (float) Math.cos(Math.toRadians(17.5))
+        );
+        gameController.getLightContainer().addLight(light);
+    }
 
     @Override
     public void move(float deltaTime) {
@@ -63,6 +83,8 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     protected void changeCoords(float x, float y) {
         object3D.getModel().translate(x - this.x, y - this.y, 0);
+        Vector4f v = new Vector4f(width / 2 - 0.2f,0,0,1).mul(object3D.getModel());
+        light.setPosition(new Vector3f(v.x, v.y, v.z));
         this.x = x;
         this.y = y;
     }
@@ -89,6 +111,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     public void turn(boolean positive) {
         this.angle += (positive ? 1 : -1) * turnDelta;
         object3D.getModel().rotateZ((positive ? 1 : -1) * turnDelta);
+        light.getDirection().rotateY((positive ? 1 : -1) * turnDelta);
     }
 
     @Override
@@ -114,6 +137,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     }
 
     protected void destroy() {
+        gameController.getLightContainer().removeLight(light);
         gameController.removeObject(this);
     }
 

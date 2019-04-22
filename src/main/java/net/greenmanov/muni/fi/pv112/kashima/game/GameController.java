@@ -11,10 +11,10 @@ import net.greenmanov.muni.fi.pv112.kashima.game.controls.MouseControls;
 import net.greenmanov.muni.fi.pv112.kashima.game.enviroment.WaterPlane;
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.*;
 import net.greenmanov.muni.fi.pv112.kashima.lights.DirLight;
+import net.greenmanov.muni.fi.pv112.kashima.lights.LightContainer;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
-import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.SimpleCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
@@ -37,7 +37,7 @@ public class GameController implements GLEventListener {
     private static final Logger LOGGER = Logger.getLogger(GameController.class.getName());
 
     private static final float MVP_FOV = 45f, MVP_NEAR = 0.1f, MVP_FAR = 100f;
-    private static final Vector3f BACKGROUND_COLOR = new Vector3f(0.2f, 0, 0.2f);
+    private static final Vector3f BACKGROUND_COLOR = new Vector3f(0.1f, 0, 0.1f);
 
     public static final int SCORE_PER_SECOND = 10;
 
@@ -165,12 +165,12 @@ public class GameController implements GLEventListener {
         mainProgram = new CanvasProgram(program);
         mvpCanvas.addProgram(mainProgram);
 
-        // TODO: Temporary
+//         Main light
         mvpCanvas.getLightContainer().addLight(new DirLight(
                 new Vector3f(-0.2f, -1.0f, -0.3f),
                 new Vector3f(0.05f, 0.05f, 0.05f),
-                new Vector3f( 0.5f, 0.5f, 0.5f),
-                new Vector3f(1.0f, 1.0f, 1.0f)
+                new Vector3f( 0.3f, 0.3f, 0.3f),
+                new Vector3f(0.5f, 0.5f, 0.5f)
         ));
     }
 
@@ -267,5 +267,9 @@ public class GameController implements GLEventListener {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public LightContainer getLightContainer() {
+        return mvpCanvas.getLightContainer();
     }
 }
