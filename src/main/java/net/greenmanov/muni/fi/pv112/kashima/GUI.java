@@ -30,6 +30,7 @@ public class GUI implements IDrawable {
     public static final String FUEL_TEXT = "Fuel: ";
     public static final String VELOCITY_TEXT = "Speed: ";
     public static final String ACCELERATION_TEXT = "Acc: ";
+    public static final String ROCKETS_TEXT = "Rocks: ";
     public static final String PAUSED_TEXT = "[Press SPACE to continue]";
 
     public static final Font GUI_FONT = new Font("TimesRoman", Font.BOLD, 20);
@@ -128,6 +129,7 @@ public class GUI implements IDrawable {
     private List<String> buildBottomText() {
         ArrayList<String> lines = new ArrayList<>();
 
+        lines.add(createNumberLine(ROCKETS_TEXT, player.getShip().getRockets(),  player.getShip().getMaxRocket()));
         lines.add(createNumberLine(ACCELERATION_TEXT, player.getShip().getAcceleration().length(), player.getShip().getMaxAcceleration()));
         lines.add(createNumberLine(VELOCITY_TEXT, player.getShip().getVelocity().length(), player.getShip().getMaxSpeed()));
         lines.add(createNumberLine(FUEL_TEXT, (int) player.getFuel(), Player.MAX_FUEL));

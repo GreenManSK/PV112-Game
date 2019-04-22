@@ -1,9 +1,6 @@
 package net.greenmanov.muni.fi.pv112.kashima.game;
 
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.AShip;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.ICollisionObject;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.IDrawableObject;
-import net.greenmanov.muni.fi.pv112.kashima.game.objects.IGameObject;
+import net.greenmanov.muni.fi.pv112.kashima.game.objects.*;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import org.joml.Vector4f;
@@ -19,6 +16,7 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
 
     public static final int MAX_HP = 100;
     public static final int MAX_FUEL = 150;
+    public static final int ROCKET_DMG = 25;
 
     private GameController gameController;
     private AShip ship;
@@ -46,13 +44,11 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     @Override
     public void logic(float deltaTime) {
         ship.logic(deltaTime);
+        ship.logic(deltaTime);
 
         Vector4f shipPos =  new Vector4f().mul(getObject3D().getModel());
         camera.getPosition().x = shipPos.x;
         camera.getPosition().z = shipPos.z;
-
-//        camera.getPosition().x = shipPos.x;
-//        camera.getPosition().z = shipPos.z;
     }
 
     @Override
@@ -64,6 +60,8 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     public void onCollision(ICollisionObject object) {
         if (object instanceof AShip) {
             //TODO: Lost
+        } else if (object instanceof Rocket) {
+            hp -= ROCKET_DMG;
         }
     }
 

@@ -13,7 +13,7 @@ import org.joml.Matrix4f;
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
 public class KingGorgeShip extends AShip {
-    
+
     public final static float MAX_SPEED = 5f;
     public final static float MAX_ACCELERATION = 1f;
     public final static float ACCELERATION_DELTA = 0.25f;
@@ -21,6 +21,10 @@ public class KingGorgeShip extends AShip {
     public final static float WIDTH = 2.6f, HEIGHT = 0.3f;
     public final static float Z_COORD = -1.05f;
     public final static int SCORE = 100;
+
+    public final static int MAX_ROCKETS = 1;
+    public final static float ROCKET_RELOADING = 1/5f;
+    public final static float ROCKET_SPEED = 15f;
 
     public KingGorgeShip(float x, float y, GameController gameController) {
         super(x, y, gameController);
@@ -35,6 +39,9 @@ public class KingGorgeShip extends AShip {
         accelerationDelta = ACCELERATION_DELTA;
         turnDelta = TURN_DELTA;
         scoreValue = SCORE;
+        maxRocket = MAX_ROCKETS;
+        rocketReloading = ROCKET_RELOADING;
+        rocketSpeed = ROCKET_SPEED;
     }
 
     @Override

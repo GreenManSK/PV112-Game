@@ -101,7 +101,7 @@ public class Rocket implements IGameObject, IDrawableObject, ICollisionObject  {
 
     @Override
     public void move(float deltaTime) {
-        Vector3f dd = new Vector3f(0,0,speed).mul(speed * deltaTime);
+        Vector3f dd = new Vector3f(0,0,10).mul(speed * deltaTime);
         object3D.getModel().translate(dd);
 
         Vector4f v = new Vector4f(0,-4f,0,1).mul(object3D.getModel());

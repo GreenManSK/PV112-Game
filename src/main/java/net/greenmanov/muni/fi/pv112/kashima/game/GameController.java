@@ -186,7 +186,6 @@ public class GameController implements GLEventListener {
     public void display(GLAutoDrawable drawable) {
         GL4 gl = drawable.getGL().getGL4();
 
-
         gameLoopStep(gl);
         drawStep(gl);
 

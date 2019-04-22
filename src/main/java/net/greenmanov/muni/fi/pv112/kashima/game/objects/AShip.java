@@ -30,9 +30,13 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     protected float accelerationDelta;
     protected float turnDelta;
     protected int scoreValue;
+    protected int maxRocket;
+    protected float rocketReloading;
+    protected float rocketSpeed;
 
     protected float x = 0, y = 0;
     protected float angle;
+    protected float rockets;
 
     protected Vector3f velocity = new Vector3f();
     protected Vector3f acceleration = new Vector3f();
@@ -40,6 +44,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     public AShip(float x, float y, GameController gameController) {
         this.gameController = gameController;
         setShipProperties();
+        rockets = maxRocket;
         setObject3d();
         addLight();
         changeCoords(x,y);
@@ -142,7 +147,23 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     @Override
     public void logic(float deltaTime) {
+        rockets = Math.min(maxRocket, rockets + rocketReloading * deltaTime);
+    }
 
+    /**
+     * Shoot rocket if possible
+     */
+    public void shoot() {
+        if (rockets >= 1) {
+            rockets -= 1;
+            Vector4f coords = new Vector4f(width/2 + 0.5f, 0, 0,1).mul(object3D.getModel());
+            Rocket rocket = new Rocket(
+                    new Vector3f(coords.x,0,coords.z),
+                    angle,
+                    rocketSpeed,
+                    gameController);
+            gameController.addObject(rocket);
+        }
     }
 
     @Override
@@ -164,5 +185,13 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     public Vector3f getAcceleration() {
         return acceleration;
+    }
+
+    public float getRockets() {
+        return rockets;
+    }
+
+    public int getMaxRocket() {
+        return maxRocket;
     }
 }

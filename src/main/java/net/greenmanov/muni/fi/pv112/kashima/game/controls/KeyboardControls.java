@@ -15,7 +15,8 @@ public class KeyboardControls implements KeyListener {
 
     private final static short QUIT_KEY = KeyEvent.VK_ESCAPE;
     private final static short FULLSCREEN_KEY = KeyEvent.VK_F4;
-    private final static short PAUSE_BUTTON = KeyEvent.VK_SPACE;
+    private final static short PAUSE_BUTTON = KeyEvent.VK_F;
+    private final static short SHOOT_BUTTON = KeyEvent.VK_SPACE;
 
     private final GLWindow window;
     private Player player;
@@ -39,6 +40,9 @@ public class KeyboardControls implements KeyListener {
                 break;
             case PAUSE_BUTTON:
                 gameController.togglePause();
+                break;
+            case SHOOT_BUTTON:
+                player.getShip().shoot();
                 break;
             case KeyEvent.VK_A:
                 player.getShip().turn(true);
