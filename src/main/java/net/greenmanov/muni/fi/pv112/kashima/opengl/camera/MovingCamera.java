@@ -158,4 +158,14 @@ public class MovingCamera implements ICamera {
     public interface ZoomChangeListener {
         void readZoom(float zoom);
     }
+
+    @Override
+    public String toString() {
+        return "MovingCamera{" +
+                "position=" + position +
+                ", yaw=" + yaw +
+                ", pitch=" + pitch +
+                ", zoom=" + zoom +
+                '}';
+    }
 }

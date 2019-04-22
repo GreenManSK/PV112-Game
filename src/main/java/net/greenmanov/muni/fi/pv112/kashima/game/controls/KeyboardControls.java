@@ -3,6 +3,7 @@ package net.greenmanov.muni.fi.pv112.kashima.game.controls;
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.opengl.GLWindow;
+import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
 import net.greenmanov.muni.fi.pv112.kashima.game.Player;
 
 /**
@@ -14,13 +15,16 @@ public class KeyboardControls implements KeyListener {
 
     private final static short QUIT_KEY = KeyEvent.VK_ESCAPE;
     private final static short FULLSCREEN_KEY = KeyEvent.VK_F4;
+    private final static short PAUSE_BUTTON = KeyEvent.VK_SPACE;
 
     private final GLWindow window;
     private Player player;
+    private GameController gameController;
 
-    public KeyboardControls(GLWindow window, Player player) {
+    public KeyboardControls(GLWindow window, Player player, GameController gameController) {
         this.window = window;
         this.player = player;
+        this.gameController = gameController;
     }
 
     @Override
@@ -31,6 +35,9 @@ public class KeyboardControls implements KeyListener {
                 break;
             case FULLSCREEN_KEY:
                 window.setFullscreen(!window.isFullscreen());
+                break;
+            case PAUSE_BUTTON:
+                gameController.togglePause();
                 break;
             case KeyEvent.VK_A:
                 player.getShip().turn(true);

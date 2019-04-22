@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLProfile;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
+import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
 import net.greenmanov.muni.fi.pv112.kashima.game.Player;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.IDrawable;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Mesh;
@@ -29,10 +30,15 @@ public class GUI implements IDrawable {
     public static final String FUEL_TEXT = "Fuel: ";
     public static final String VELOCITY_TEXT = "Speed: ";
     public static final String ACCELERATION_TEXT = "Acc: ";
+    public static final String PAUSED_TEXT = "[Press SPACE to continue]";
 
     public static final Font GUI_FONT = new Font("TimesRoman", Font.BOLD, 20);
     public static final Color GUI_TEXT_COLOR = Color.WHITE;
     public static final Color GUI_BG_COLOR = new Color(0,0,0,150);
+
+
+    public static final Font GUI_FONT_PAUSED = new Font("TimesRoman", Font.BOLD, 20);
+    public static final Color GUI_COLOR_PAUSED = new Color(255,0,0,150);
 
     public static final int SCREEN_PADDING = 10;
 
@@ -60,6 +66,7 @@ public class GUI implements IDrawable {
     private int width;
     private int height;
 
+    private GameController gameController;
     private Player player;
     private int score;
 
@@ -104,6 +111,15 @@ public class GUI implements IDrawable {
                 ig2.drawString(line, SCREEN_PADDING, height - SCREEN_PADDING - i * stringHeight);
                 i += 1;
             }
+        }
+
+        if (gameController != null && gameController.isPaused()) {
+            ig2.setFont(GUI_FONT_PAUSED);
+            ig2.setPaint(GUI_COLOR_PAUSED);
+            fontMetrics = ig2.getFontMetrics();
+            stringHeight = fontMetrics.getAscent();
+            bounds = fontMetrics.getStringBounds(PAUSED_TEXT, ig2);
+            ig2.drawString(PAUSED_TEXT, width / 2 - (int) bounds.getWidth() / 2, height / 2 - stringHeight / 2);
         }
 
         setTexture();
@@ -207,5 +223,13 @@ public class GUI implements IDrawable {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
     }
 }

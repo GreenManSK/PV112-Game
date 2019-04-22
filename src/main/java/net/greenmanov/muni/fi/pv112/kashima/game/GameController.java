@@ -7,11 +7,13 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import net.greenmanov.muni.fi.pv112.kashima.GUI;
 import net.greenmanov.muni.fi.pv112.kashima.game.controls.KeyboardControls;
+import net.greenmanov.muni.fi.pv112.kashima.game.controls.MouseControls;
 import net.greenmanov.muni.fi.pv112.kashima.game.enviroment.WaterPlane;
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.*;
 import net.greenmanov.muni.fi.pv112.kashima.lights.DirLight;
 import net.greenmanov.muni.fi.pv112.kashima.models.Models;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.MVPCanvas;
+import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.SimpleCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.CanvasProgram;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
@@ -47,7 +49,7 @@ public class GameController implements GLEventListener {
     private double deltaTime;
     private double lastFrame;
 
-    private SimpleCamera camera;
+    private MovingCamera camera;
     private MVPCanvas mvpCanvas;
     private CanvasProgram mainProgram;
     private CanvasProgram guiCanvas;
@@ -56,9 +58,11 @@ public class GameController implements GLEventListener {
     private GUI gui;
 
     private KeyboardControls keyboardControls;
+    private MouseControls mouseControls;
 
     private Player player;
     private float score;
+    private boolean paused = false;
 
     public GameController(GLWindow window) {
         this.window = window;
@@ -115,8 +119,10 @@ public class GameController implements GLEventListener {
     }
 
     private void enableControls() {
-        keyboardControls = new KeyboardControls(window, player);
+        keyboardControls = new KeyboardControls(window, player, this);
         this.window.addKeyListener(keyboardControls);
+        mouseControls = new MouseControls(camera);
+        this.window.addMouseListener(mouseControls);
     }
 
     private void prepareGameObjects() {
@@ -138,6 +144,7 @@ public class GameController implements GLEventListener {
         Program guiProgram = new Program(gl, "shaders", "gui");
         guiCanvas = new CanvasProgram(guiProgram);
         gui = new GUI(window.getWidth(), window.getHeight(), gl);
+        gui.setGameController(this);
         guiCanvas.getDrawables().add(gui);
     }
 
@@ -150,8 +157,9 @@ public class GameController implements GLEventListener {
     }
 
     private void prepareMvpCanvas(GL4 gl) {
-        camera = new SimpleCamera(new Vector3f(0, 10f, 0), new Vector3f());
+        camera = new MovingCamera(new Vector3f(0,10f,0), new Vector3f(0,1,0), 0, -90);
         mvpCanvas = new MVPCanvas(camera, MVP_FOV, window.getWidth(), window.getHeight(), MVP_NEAR, MVP_FAR);
+        camera.setZoomChangeListener((zoom) -> mvpCanvas.setFov(zoom));
 
         Program program  = new Program(gl, "shaders", "main");
         mainProgram = new CanvasProgram(program);
@@ -169,6 +177,7 @@ public class GameController implements GLEventListener {
     @Override
     public void display(GLAutoDrawable drawable) {
         GL4 gl = drawable.getGL().getGL4();
+
 
         gameLoopStep(gl);
         drawStep(gl);
@@ -193,9 +202,11 @@ public class GameController implements GLEventListener {
      */
     private void gameLoopStep(GL4 gl) {
         float deltaTime = recomputeDeltaTime();
-        moveStep(deltaTime);
-        collisionDetector.detect();
-        logicStep(deltaTime);
+        if (!paused) {
+            moveStep(deltaTime);
+            collisionDetector.detect();
+            logicStep(deltaTime);
+        }
     }
 
     /**
@@ -248,5 +259,13 @@ public class GameController implements GLEventListener {
     public void addScore(float score) {
         this.score += score;
         gui.setScore((int) this.score);
+    }
+
+    public void togglePause() {
+        paused = !paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 }
