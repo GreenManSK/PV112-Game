@@ -17,9 +17,15 @@ import java.awt.geom.Area;
  */
 public class Player implements IGameObject, IDrawableObject, ICollisionObject {
 
+    public static final int MAX_HP = 100;
+    public static final int MAX_FUEL = 150;
+
     private GameController gameController;
     private AShip ship;
     private SimpleCamera camera;
+
+    private int hp = MAX_HP;
+    private float fuel = MAX_FUEL;
 
     public Player(GameController gameController, AShip ship, SimpleCamera camera) {
         this.gameController = gameController;
@@ -57,10 +63,28 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
 
     @Override
     public void onCollision(ICollisionObject object) {
-
+        if (object instanceof AShip) {
+            //TODO: Lost
+        }
     }
 
     public AShip getShip() {
         return ship;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public float getFuel() {
+        return fuel;
+    }
+
+    public void setFuel(float fuel) {
+        this.fuel = fuel;
     }
 }

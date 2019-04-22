@@ -19,6 +19,7 @@ import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Vector3f;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.logging.Logger;
 
 import static com.jogamp.opengl.GL.*;
@@ -35,6 +36,8 @@ public class GameController implements GLEventListener {
 
     private static final float MVP_FOV = 45f, MVP_NEAR = 0.1f, MVP_FAR = 100f;
     private static final Vector3f BACKGROUND_COLOR = new Vector3f(0.2f, 0, 0.2f);
+
+    public static final int SCORE_PER_SECOND = 10;
 
     private GLWindow window;
 
@@ -55,6 +58,7 @@ public class GameController implements GLEventListener {
     private KeyboardControls keyboardControls;
 
     private Player player;
+    private float score;
 
     public GameController(GLWindow window) {
         this.window = window;
@@ -74,7 +78,8 @@ public class GameController implements GLEventListener {
     public void removeObject(IGameObject object) {
         objects.remove(object);
         if (object instanceof IDrawableObject) {
-            mainProgram.getDrawables().remove(((IDrawableObject) object).getObject3D());
+            IDrawableObject drawable = (IDrawableObject) object;
+            mainProgram.getDrawables().remove(drawable.getObject3D());
         }
         if (object instanceof ICollisionObject) {
             collisionDetector.removeObject((ICollisionObject) object);
@@ -116,9 +121,17 @@ public class GameController implements GLEventListener {
 
     private void prepareGameObjects() {
         player = new Player(this, new KingGorgeShip(0,0,this), camera);
+        gui.setPlayer(player);
         addObject(player);
-        AShip ship = new KingGorgeShip(KingGorgeShip.WIDTH, 0, this);
-        addObject(ship);
+
+        Random rand = new Random();
+        for (int i = 0; i < 10; i++) {
+            AShip ship = new KingGorgeShip(
+                    (rand.nextBoolean() ? 1 : -1) + 5*rand.nextFloat(),
+                    (rand.nextBoolean() ? 1 : -1) + 5*rand.nextFloat(),
+                    this);
+            addObject(ship);
+        }
     }
 
     private void prepareGui(GL4 gl) {
@@ -169,7 +182,9 @@ public class GameController implements GLEventListener {
     private void drawStep(GL4 gl) {
         gl.glClearColor(BACKGROUND_COLOR.x, BACKGROUND_COLOR.y, BACKGROUND_COLOR.z, 1.0f);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+
         mvpCanvas.display(gl);
+        gui.redraw();
         guiCanvas.display(gl);
     }
 
@@ -195,6 +210,7 @@ public class GameController implements GLEventListener {
      */
     private void logicStep(float deltaTime) {
         objects.forEach(obj -> obj.logic(deltaTime));
+        addScore(SCORE_PER_SECOND * deltaTime);
     }
 
     private float recomputeDeltaTime() {
@@ -227,5 +243,10 @@ public class GameController implements GLEventListener {
         }
 
         checkError(LOGGER, gl, "reshape");
+    }
+
+    public void addScore(float score) {
+        this.score += score;
+        gui.setScore((int) this.score);
     }
 }

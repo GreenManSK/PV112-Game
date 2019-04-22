@@ -20,6 +20,8 @@ public class KingGorgeShip extends AShip {
     public final static float ACCELERATION_DELTA = 0.25f;
     public final static float TURN_DELTA = 0.02f;
     public final static float WIDTH = 2.6f, HEIGHT = 0.3f;
+    public final static float Z_COORD = -1.05f;
+    public final static int SCORE = 100;
 
     public KingGorgeShip(float x, float y, GameController gameController) {
         super(x, y, gameController);
@@ -33,6 +35,7 @@ public class KingGorgeShip extends AShip {
         maxAcceleration = MAX_ACCELERATION;
         accelerationDelta = ACCELERATION_DELTA;
         turnDelta = TURN_DELTA;
+        scoreValue = SCORE;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class KingGorgeShip extends AShip {
         object3D = new Object3D(Models.KING_GORGE_SHIP);
         object3D.setTexture(Textures.KING_GEORGE_SHIP);
         object3D.setMaterial(Materials.SHIP);
-        object3D.setModel(new Matrix4f().rotate((float) Math.toRadians(-90.0), 1, 0, 0));
+        object3D.setModel(new Matrix4f().rotate((float) Math.toRadians(-90.0), 1, 0, 0)
+                .translate(0, 0, Z_COORD));
     }
 }

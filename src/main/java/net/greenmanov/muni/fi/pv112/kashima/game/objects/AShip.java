@@ -1,6 +1,7 @@
 package net.greenmanov.muni.fi.pv112.kashima.game.objects;
 
 import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
+import net.greenmanov.muni.fi.pv112.kashima.game.Player;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -26,6 +27,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     protected float maxAcceleration;
     protected float accelerationDelta;
     protected float turnDelta;
+    protected int scoreValue;
 
     protected float x = 0, y = 0;
     protected float angle;
@@ -105,7 +107,14 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     @Override
     public void onCollision(ICollisionObject object) {
+        if (object instanceof Player) {
+            gameController.addScore(scoreValue);
+        }
+        destroy();
+    }
 
+    protected void destroy() {
+        gameController.removeObject(this);
     }
 
     @Override
@@ -116,5 +125,21 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     @Override
     public Object3D getObject3D() {
         return object3D;
+    }
+
+    public float getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public float getMaxAcceleration() {
+        return maxAcceleration;
+    }
+
+    public Vector3f getVelocity() {
+        return velocity;
+    }
+
+    public Vector3f getAcceleration() {
+        return acceleration;
     }
 }
