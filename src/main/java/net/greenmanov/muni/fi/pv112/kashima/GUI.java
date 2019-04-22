@@ -189,9 +189,9 @@ public class GUI implements IDrawable {
     }
 
     public void reshape(int widht, int height) {
-        this.width = widht;
-        this.height = height;
-        redraw();
+//        this.width = widht;
+//        this.height = height;
+//        redraw();
     }
 
     /**
