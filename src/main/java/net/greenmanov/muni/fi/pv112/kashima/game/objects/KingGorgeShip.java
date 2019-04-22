@@ -13,8 +13,7 @@ import org.joml.Matrix4f;
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
 public class KingGorgeShip extends AShip {
-
-    // TODO: Set to real values
+    
     public final static float MAX_SPEED = 5f;
     public final static float MAX_ACCELERATION = 1f;
     public final static float ACCELERATION_DELTA = 0.25f;

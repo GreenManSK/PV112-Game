@@ -45,6 +45,7 @@ public class GameController implements GLEventListener {
 
     private CollisionDetector collisionDetector;
     private HashSet<IGameObject> objects = new HashSet<>();
+    private HashSet<IGameObject> delete = new HashSet<>();
 
     private double deltaTime;
     private double lastFrame;
@@ -79,7 +80,14 @@ public class GameController implements GLEventListener {
         }
     }
 
+    /**
+     * Add object to list of objects that should be deleted
+     */
     public void removeObject(IGameObject object) {
+        delete.add(object);
+    }
+
+    private void removeObjectReal(IGameObject object) {
         objects.remove(object);
         if (object instanceof IDrawableObject) {
             IDrawableObject drawable = (IDrawableObject) object;
@@ -167,7 +175,7 @@ public class GameController implements GLEventListener {
 
 //         Main light
         mvpCanvas.getLightContainer().addLight(new DirLight(
-                new Vector3f(-0.2f, -1.0f, -0.3f),
+                new Vector3f(0, -15.0f, 0),
                 new Vector3f(0.05f, 0.05f, 0.05f),
                 new Vector3f( 0.3f, 0.3f, 0.3f),
                 new Vector3f(0.5f, 0.5f, 0.5f)
@@ -206,7 +214,16 @@ public class GameController implements GLEventListener {
             moveStep(deltaTime);
             collisionDetector.detect();
             logicStep(deltaTime);
+            deleteObjectsStep();
         }
+    }
+
+    /**
+     * Delete all object that should be deleted this step
+     */
+    private void deleteObjectsStep() {
+        delete.forEach(this::removeObjectReal);
+        delete.clear();
     }
 
     /**
