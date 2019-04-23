@@ -22,6 +22,7 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.program.Program;
 import net.greenmanov.muni.fi.pv112.kashima.textures.Textures;
 import org.joml.Vector3f;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.logging.Logger;
@@ -130,10 +131,14 @@ public class GameController implements GLEventListener {
     }
 
     private void enableControls() {
-        keyboardControls = new KeyboardControls(window, player, this);
-        this.window.addKeyListener(keyboardControls);
-        mouseControls = new MouseControls(camera);
-        this.window.addMouseListener(mouseControls);
+        try {
+            keyboardControls = new KeyboardControls(window, player, this);
+            this.window.addKeyListener(keyboardControls);
+            mouseControls = new MouseControls(camera, window);
+            this.window.addMouseListener(mouseControls);
+        } catch (AWTException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private void prepareGameObjects() {
@@ -142,12 +147,13 @@ public class GameController implements GLEventListener {
         addObject(player);
 
         Random rand = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 25; i++) {
             AShip ship = new KingGorgeShip(
                     (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
                     (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
                     this);
             ship.turn(rand.nextBoolean(), rand.nextInt(360));
+            ship.accelerate(rand.nextBoolean(), rand.nextInt(5));
             addObject(ship);
         }
         for (int i = 0; i < 10; i++) {
@@ -156,18 +162,27 @@ public class GameController implements GLEventListener {
                     (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
                     this);
             ship.turn(rand.nextBoolean(), rand.nextInt(360));
+            ship.accelerate(rand.nextBoolean(), rand.nextInt(5));
             addObject(ship);
         }
 
-        Barrel barrel = new Barrel(new Vector3f(0,0,3f), this);
-        addObject(barrel);
+        for (int i = 0; i < 30; i++) {
+            Barrel barrel = new Barrel(
+                    new Vector3f((rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
+                            0,
+                            (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat()
+                    ), this);
+            addObject(barrel);
+        }
 
-        Wrench wrench = new Wrench(new Vector3f(3f,0,3f), this);
-        addObject(wrench);
-
-
-        wrench = new Wrench(new Vector3f(3f + 0.35f,0,3f), this);
-        addObject(wrench);
+        for (int i = 0; i < 30; i++) {
+            Wrench wrench = new Wrench(
+                    new Vector3f((rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
+                            0,
+                            (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat()
+                    ), this);
+            addObject(wrench);
+        }
     }
 
     private void prepareGui(GL4 gl) {
@@ -317,7 +332,8 @@ public class GameController implements GLEventListener {
         this.window.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
-                new Thread(window::destroy).start();
+                if (e.getKeyCode() == KeyboardControls.QUIT_KEY)
+                    new Thread(window::destroy).start();
             }
 
             @Override

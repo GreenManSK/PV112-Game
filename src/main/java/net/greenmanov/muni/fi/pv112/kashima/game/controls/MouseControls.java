@@ -2,7 +2,10 @@ package net.greenmanov.muni.fi.pv112.kashima.game.controls;
 
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.opengl.GLWindow;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
+
+import java.awt.*;
 
 /**
  * Enable mouse controls for the Game
@@ -11,13 +14,17 @@ import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
  */
 public class MouseControls implements MouseListener {
 
-    private MovingCamera camera;
+    private MovingCamera camera, saveCamera;
 
     private boolean firstMouse = true;
     private int lastX, lastY;
+    private Robot robot;
+    private GLWindow window;
 
-    public MouseControls(MovingCamera camera) {
+    public MouseControls(MovingCamera camera, GLWindow window) throws AWTException {
+        this.robot = new Robot();
         this.camera = camera;
+        this.window = window;
     }
 
     @Override
@@ -61,8 +68,10 @@ public class MouseControls implements MouseListener {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (camera == null)
+        if (camera == null) {
+            camera = saveCamera;
             return;
+        }
 
         int xpos = e.getX();
         int ypos = e.getY();
@@ -77,7 +86,20 @@ public class MouseControls implements MouseListener {
         lastX = xpos;
         lastY = ypos;
 
-        camera.moseMove(xoffset, yoffset, true);
+        if (camera != null) {
+            camera.moseMove(xoffset, yoffset, true);
+            fixMousePosition(xpos, ypos);
+        }
+    }
+
+    private void fixMousePosition(int x, int y) {
+        if (x > 0 && x < window.getWidth() && y > 0 && y < window.getHeight())
+            return;
+        saveCamera = camera;
+        camera = null;
+        lastX = window.getWidth()/2;
+        lastY = window.getHeight()/2;
+        robot.mouseMove(window.getX() + window.getWidth()/2, window.getY() + window.getHeight()/2);
     }
 
     @Override

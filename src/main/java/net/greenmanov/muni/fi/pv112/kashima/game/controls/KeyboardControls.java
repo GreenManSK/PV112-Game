@@ -13,10 +13,10 @@ import net.greenmanov.muni.fi.pv112.kashima.game.Player;
  */
 public class KeyboardControls implements KeyListener {
 
-    private final static short QUIT_KEY = KeyEvent.VK_ESCAPE;
-    private final static short FULLSCREEN_KEY = KeyEvent.VK_F4;
-    private final static short PAUSE_BUTTON = KeyEvent.VK_F;
-    private final static short SHOOT_BUTTON = KeyEvent.VK_SPACE;
+    public final static short QUIT_KEY = KeyEvent.VK_ESCAPE;
+    public final static short FULLSCREEN_KEY = KeyEvent.VK_F4;
+    public final static short PAUSE_BUTTON = KeyEvent.VK_F;
+    public final static short SHOOT_BUTTON = KeyEvent.VK_SPACE;
 
     private final GLWindow window;
     private Player player;

@@ -30,6 +30,7 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     public Player(GameController gameController, AShip ship, MovingCamera camera) {
         this.gameController = gameController;
         this.ship = ship;
+        ship.setUseAi(false);
         this.camera = camera;
     }
 
@@ -70,7 +71,8 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     @Override
     public void onCollision(ICollisionObject object) {
         if (object instanceof AShip) {
-            gameController.gameOver();
+            //gameController.gameOver();
+            hp -= ROCKET_DMG;
         } else if (object instanceof Rocket) {
             hp -= ROCKET_DMG;
         } else if (object instanceof Barrel) {

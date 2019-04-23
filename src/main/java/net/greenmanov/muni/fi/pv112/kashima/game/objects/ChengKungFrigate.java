@@ -17,13 +17,13 @@ import org.joml.Vector4f;
 public class ChengKungFrigate extends AShip  {
 
     public final static float WIDTH = 4.3f, HEIGHT = .55f;
-    public final static float Z_COORD = -1f;
+    public final static float Z_COORD = -1.1f;
 
     public final static float MAX_SPEED = 5f;
     public final static float MAX_ACCELERATION = 1.5f;
     public final static float ACCELERATION_DELTA = 0.25f;
     public final static float TURN_DELTA = 0.02f;
-    public final static int SCORE = 100;
+    public final static int SCORE = 500;
 
     public final static int MAX_ROCKETS = 1;
     public final static float ROCKET_RELOADING = 1/3f;
@@ -58,7 +58,7 @@ public class ChengKungFrigate extends AShip  {
         object3D.setMaterial(Materials.SHIP);
         object3D.setScale(.0008f);
         object3D.setModel(new Matrix4f().rotateY((float) Math.toRadians(90))
-                .translate(0, -1.1f, 0));
+                .translate(0, Z_COORD, 0));
     }
 
     @Override

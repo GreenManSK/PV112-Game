@@ -10,6 +10,7 @@ import org.joml.Vector4f;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
+import java.util.Random;
 
 /**
  * Abstract ship object
@@ -17,6 +18,9 @@ import java.awt.geom.Rectangle2D;
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
 abstract public class AShip implements IGameObject, IDrawableObject, ICollisionObject {
+
+    private static final Random RANDOM = new Random();
+    private static final float LOGIC_SPEED = 0.5f;
 
     protected GameController gameController;
 
@@ -41,6 +45,10 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     protected Vector3f velocity = new Vector3f();
     protected Vector3f acceleration = new Vector3f();
+
+    protected boolean useAi = true;
+    protected float time = 0;
+    protected float lastRotation = 0;
 
     public AShip(float x, float y, GameController gameController) {
         this.gameController = gameController;
@@ -92,8 +100,12 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
      * Accelerate ship by value if possible
      */
     public void accelerate(boolean forward) {
+        accelerate(forward, 1);
+    }
+
+    public void accelerate(boolean forward, int number) {
         Vector3f newAcceleration = new Vector3f(acceleration);
-        newAcceleration.add(new Vector3f((forward ? 1 : -1) * accelerationDelta, 0, 0));
+        newAcceleration.add(new Vector3f((forward ? 1 : -1) * accelerationDelta * number, 0, 0));
         if (newAcceleration.length() <= maxAcceleration) {
             acceleration = newAcceleration;
         }
@@ -137,7 +149,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     @Override
     public void onCollision(ICollisionObject object) {
-        if (object instanceof Player) {
+        if (object instanceof Player || object instanceof Rocket) {
             gameController.addScore(scoreValue);
         }
         destroy();
@@ -151,6 +163,13 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     @Override
     public void logic(float deltaTime) {
         rockets = Math.min(maxRocket, rockets + rocketReloading * deltaTime);
+        if (useAi) {
+            time += deltaTime;
+            if ((time - lastRotation) > LOGIC_SPEED) {
+                lastRotation = time;
+                turn(RANDOM.nextBoolean());
+            }
+        }
     }
 
     /**
@@ -200,5 +219,13 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
 
     public SpotLight getLight() {
         return light;
+    }
+
+    public boolean isUseAi() {
+        return useAi;
+    }
+
+    public void setUseAi(boolean useAi) {
+        this.useAi = useAi;
     }
 }
