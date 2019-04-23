@@ -82,8 +82,10 @@ public class GUI implements IDrawable {
     }
 
     private void createGraphics() {
-        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        ig2 = image.createGraphics();
+        if (image == null) {
+            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            ig2 = image.createGraphics();
+        }
 
         ig2.setFont(GUI_FONT);
         FontMetrics fontMetrics = ig2.getFontMetrics();
