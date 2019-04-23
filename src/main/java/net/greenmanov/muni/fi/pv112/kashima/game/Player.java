@@ -15,8 +15,9 @@ import java.awt.geom.Area;
 public class Player implements IGameObject, IDrawableObject, ICollisionObject {
 
     public static final int MAX_HP = 100;
-    public static final int MAX_FUEL = 150;
+    public static final int MAX_FUEL = 250;
     public static final int ROCKET_DMG = 25;
+    public static final int FUEL_PER_SECOND = 5;
 
     private GameController gameController;
     private AShip ship;
@@ -44,11 +45,15 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     @Override
     public void logic(float deltaTime) {
         ship.logic(deltaTime);
-        ship.logic(deltaTime);
 
         Vector4f shipPos =  new Vector4f().mul(getObject3D().getModel());
         camera.getPosition().x = shipPos.x;
         camera.getPosition().z = shipPos.z;
+
+        fuel -= deltaTime * FUEL_PER_SECOND;
+
+        //TODO: HP & Fuel check - LOST
+        //TODO: Coords check - LOST
     }
 
     @Override
@@ -62,6 +67,8 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
             //TODO: Lost
         } else if (object instanceof Rocket) {
             hp -= ROCKET_DMG;
+        } else if (object instanceof Barrel) {
+            fuel += ((Barrel) object).getCapacity();
         }
     }
 

@@ -71,6 +71,7 @@ public class GameController implements GLEventListener {
     }
 
     public void addObject(IGameObject object) {
+        // TODO: Add to buffer before realy adding
         objects.add(object);
         if (object instanceof IDrawableObject) {
             mainProgram.getDrawables().add(((IDrawableObject) object).getObject3D());
@@ -146,6 +147,9 @@ public class GameController implements GLEventListener {
                     this);
             addObject(ship);
         }
+
+        Barrel barrel = new Barrel(new Vector3f(3f,0,0), this);
+        addObject(barrel);
     }
 
     private void prepareGui(GL4 gl) {

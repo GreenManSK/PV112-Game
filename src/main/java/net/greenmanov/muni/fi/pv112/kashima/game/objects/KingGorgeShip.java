@@ -15,7 +15,7 @@ import org.joml.Matrix4f;
 public class KingGorgeShip extends AShip {
 
     public final static float MAX_SPEED = 5f;
-    public final static float MAX_ACCELERATION = 1f;
+    public final static float MAX_ACCELERATION = 1.5f;
     public final static float ACCELERATION_DELTA = 0.25f;
     public final static float TURN_DELTA = 0.02f;
     public final static float WIDTH = 2.6f, HEIGHT = 0.3f;

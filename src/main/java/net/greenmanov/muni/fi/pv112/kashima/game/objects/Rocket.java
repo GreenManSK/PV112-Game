@@ -22,7 +22,7 @@ import java.awt.geom.Rectangle2D;
  */
 public class Rocket implements IGameObject, IDrawableObject, ICollisionObject  {
     public final static float Z_COORD = -0.9f;
-    public final static float WIDTH = 0.44f, HEIGHT = 0.08f; //TODO
+    public final static float WIDTH = 0.44f, HEIGHT = 0.08f;
 
     private GameController gameController;
 
