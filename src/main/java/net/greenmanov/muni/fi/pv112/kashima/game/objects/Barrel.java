@@ -24,7 +24,7 @@ public class Barrel implements IGameObject, IDrawableObject, ICollisionObject {
 
     public final static int CAPACITY = 25;
     public final static float Z_COORD = -0.9f;
-    public final static float WIDTH = 0.3f, HEIGHT = 0.3f;
+    public final static float WIDTH = 0.4f, HEIGHT = 0.4f;
 
     private final static int ROTATION_SPEED = 90;
     private static final Vector3fc ROTATION_VECTOR = new Vector3f(.3f, 1f, .3f);

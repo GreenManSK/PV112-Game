@@ -43,15 +43,18 @@ public class GameController implements GLEventListener {
     private static final Vector3f BACKGROUND_COLOR = new Vector3f(0.1f, 0, 0.1f);
 
     public static final int SCORE_PER_SECOND = 10;
+    private static final int GENERATION_TIME = 3;
 
     private GLWindow window;
 
     private CollisionDetector collisionDetector;
     private HashSet<IGameObject> objects = new HashSet<>();
+    private HashSet<IGameObject> add = new HashSet<>();
     private HashSet<IGameObject> delete = new HashSet<>();
 
     private double deltaTime;
     private double lastFrame;
+    private double time;
 
     private MovingCamera camera;
     private MVPCanvas mvpCanvas;
@@ -74,6 +77,10 @@ public class GameController implements GLEventListener {
     }
 
     public void addObject(IGameObject object) {
+        add.add(object);
+    }
+
+    private void addObjectReal(IGameObject object) {
         // TODO: Add to buffer before realy adding
         objects.add(object);
         if (object instanceof IDrawableObject) {
@@ -144,55 +151,27 @@ public class GameController implements GLEventListener {
     private void prepareGameObjects() {
         player = new Player(this, new KingGorgeShip(0,0,this), camera);
         gui.setPlayer(player);
-        addObject(player);;
+        addObject(player);
 
         Random rand = new Random();
 
         for (int i = 0; i < 25; i++) {
-            AShip ship = new Battleship(
-                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                    this);
-            ship.turn(rand.nextBoolean(), rand.nextInt(360));
-            ship.accelerate(rand.nextBoolean(), rand.nextInt(5));
-            addObject(ship);
+            addObject(ObjectGenerator.randomBattleship(this));
         }
 
         for (int i = 0; i < 25; i++) {
-            AShip ship = new KingGorgeShip(
-                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                    this);
-            ship.turn(rand.nextBoolean(), rand.nextInt(360));
-            ship.accelerate(rand.nextBoolean(), rand.nextInt(5));
-            addObject(ship);
+            addObject(ObjectGenerator.randomKingGorge(this));
         }
         for (int i = 0; i < 10; i++) {
-            AShip ship = new ChengKungFrigate(
-                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                    this);
-            ship.turn(rand.nextBoolean(), rand.nextInt(360));
-            ship.accelerate(rand.nextBoolean(), rand.nextInt(5));
-            addObject(ship);
+            addObject(ObjectGenerator.randomChengKung(this));
         }
 
         for (int i = 0; i < 30; i++) {
-            Barrel barrel = new Barrel(
-                    new Vector3f((rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                            0,
-                            (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat()
-                    ), this);
-            addObject(barrel);
+            addObject(ObjectGenerator.randomBarrel(this));
         }
 
         for (int i = 0; i < 30; i++) {
-            Wrench wrench = new Wrench(
-                    new Vector3f((rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
-                            0,
-                            (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat()
-                    ), this);
-            addObject(wrench);
+            addObject(ObjectGenerator.randomWrench(this));
         }
     }
 
@@ -261,8 +240,17 @@ public class GameController implements GLEventListener {
             moveStep(deltaTime);
             collisionDetector.detect();
             logicStep(deltaTime);
+            addObjectsStep();
             deleteObjectsStep();
         }
+    }
+
+    /**
+     * Add new objects
+     */
+    private void addObjectsStep() {
+        add.forEach(this::addObjectReal);
+        add.clear();
     }
 
     /**
@@ -286,12 +274,17 @@ public class GameController implements GLEventListener {
     private void logicStep(float deltaTime) {
         objects.forEach(obj -> obj.logic(deltaTime));
         addScore(SCORE_PER_SECOND * deltaTime);
+        if (time > GENERATION_TIME) {
+            time = 0;
+            addObject(ObjectGenerator.randomObject(this));
+        }
     }
 
     private float recomputeDeltaTime() {
         double currentFrame = System.nanoTime() / 1000000000.0;
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        time += deltaTime;
         return (float) deltaTime;
     }
 
