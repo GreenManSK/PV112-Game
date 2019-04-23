@@ -68,7 +68,9 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
         } else if (object instanceof Rocket) {
             hp -= ROCKET_DMG;
         } else if (object instanceof Barrel) {
-            fuel += ((Barrel) object).getCapacity();
+            fuel = Math.min(MAX_FUEL, fuel + ((Barrel) object).getCapacity());
+        } else if (object instanceof Wrench) {
+            hp = Math.min(MAX_HP, hp + ((Wrench) object).getCapacity());
         }
     }
 

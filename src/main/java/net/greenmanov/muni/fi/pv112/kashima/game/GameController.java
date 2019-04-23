@@ -148,8 +148,15 @@ public class GameController implements GLEventListener {
             addObject(ship);
         }
 
-        Barrel barrel = new Barrel(new Vector3f(3f,0,0), this);
+        Barrel barrel = new Barrel(new Vector3f(0,0,3f), this);
         addObject(barrel);
+
+        Wrench wrench = new Wrench(new Vector3f(3f,0,3f), this);
+        addObject(wrench);
+
+
+        wrench = new Wrench(new Vector3f(3f + 0.35f,0,3f), this);
+        addObject(wrench);
     }
 
     private void prepareGui(GL4 gl) {

@@ -16,15 +16,15 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 
 /**
- * Barrel of fuel
+ * Repair wrench
  *
  * @author Lukáš Kurčík <lukas.kurcik@gmail.com>
  */
-public class Barrel implements IGameObject, IDrawableObject, ICollisionObject {
+public class Wrench implements IGameObject, IDrawableObject, ICollisionObject {
 
     public final static int CAPACITY = 25;
     public final static float Z_COORD = -0.9f;
-    public final static float WIDTH = 0.3f, HEIGHT = 0.3f;
+    public final static float WIDTH = 0.35f, HEIGHT = 0.35f;
 
     private final static int ROTATION_SPEED = 90;
     private static final Vector3fc ROTATION_VECTOR = new Vector3f(.3f, 1f, .3f);
@@ -34,16 +34,16 @@ public class Barrel implements IGameObject, IDrawableObject, ICollisionObject {
     private Object3D object3D;
     private PointLight light;
 
-    public Barrel(Vector3f position, GameController gameController) {
+    public Wrench(Vector3f position, GameController gameController) {
         this.gameController = gameController;
         setObject3d(position);
         addLights(position);
     }
 
     private void setObject3d(Vector3f position) {
-        object3D = new Object3D(Models.BARREL);
-        object3D.setScale(.3f);
-        object3D.setTexture(Textures.BARREL);
+        object3D = new Object3D(Models.WRENCH);
+        object3D.setScale(.01f);
+        object3D.setTexture(Textures.WRENCH);
         object3D.setMaterial(Materials.SILVER);
         object3D.setModel(
                 new Matrix4f()
@@ -57,15 +57,15 @@ public class Barrel implements IGameObject, IDrawableObject, ICollisionObject {
                 1f,
                 0.7f,
                 2.5f,
-                new Vector3f(0f, 0.8f,0.1f),
-                new Vector3f( 0f,  0.8f,0.1f),
-                new Vector3f(0f, 0.8f,0.1f));
+                new Vector3f(0.8f, 0.8f,0.8f),
+                new Vector3f( 0.8f,  0.8f,0.8f),
+                new Vector3f(0.8f, 0.8f,0.8f));
         gameController.getLightContainer().addLight(light);
     }
 
     @Override
     public Area getCollisionArea() {
-        Vector4f coords = new Vector4f(0, 0, 0,1).mul(object3D.getModel());
+        Vector4f coords = new Vector4f(0, 0, 0, 1).mul(object3D.getModel());
         float x = coords.x;
         float y = coords.z;
         Area area = new Area(new Rectangle2D.Float(
@@ -92,7 +92,7 @@ public class Barrel implements IGameObject, IDrawableObject, ICollisionObject {
     @Override
     public void move(float deltaTime) {
         object3D.getModel()
-                .rotate((float) Math.toRadians(ROTATION_SPEED) * deltaTime,ROTATION_VECTOR);
+                .rotate((float) Math.toRadians(ROTATION_SPEED) * deltaTime, ROTATION_VECTOR);
     }
 
     @Override

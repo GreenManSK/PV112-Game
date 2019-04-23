@@ -17,8 +17,11 @@ final public class Textures {
     public static final Texture BARREL = TextureLoader.fromResource("textures/oildrum_col.jpg");
     public static final Texture ROCKET = TextureLoader.fromResource("textures/HellFire.png");
     public static final Texture WATER = TextureLoader.fromResource("textures/water.jpg");
+    public static final Texture WRENCH = TextureLoader.fromResource("textures/wrench.jpg");
 
-    private static final Texture[] textures = {LUKY, KING_GEORGE_SHIP, CHENG_KUNG_FRIGATE, BATTLESHIP_C, BARREL, ROCKET, WATER};
+    private static final Texture[] textures = {
+            LUKY, KING_GEORGE_SHIP, CHENG_KUNG_FRIGATE, BATTLESHIP_C, BARREL, ROCKET, WATER, WRENCH
+    };
 
 
     private Textures() {
