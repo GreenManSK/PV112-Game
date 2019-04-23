@@ -194,4 +194,8 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     public int getMaxRocket() {
         return maxRocket;
     }
+
+    public SpotLight getLight() {
+        return light;
+    }
 }

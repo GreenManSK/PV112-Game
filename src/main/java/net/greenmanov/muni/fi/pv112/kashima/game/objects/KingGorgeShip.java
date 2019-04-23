@@ -23,7 +23,7 @@ public class KingGorgeShip extends AShip {
     public final static int SCORE = 100;
 
     public final static int MAX_ROCKETS = 1;
-    public final static float ROCKET_RELOADING = 1/5f;
+    public final static float ROCKET_RELOADING = 1/3f;
     public final static float ROCKET_SPEED = 15f;
 
     public KingGorgeShip(float x, float y, GameController gameController) {

@@ -32,14 +32,16 @@ public class GUI implements IDrawable {
     public static final String ACCELERATION_TEXT = "Acc: ";
     public static final String ROCKETS_TEXT = "Rocks: ";
     public static final String PAUSED_TEXT = "[Press SPACE to continue]";
+    public static final String GAME_OVER_TEXT = "YOU DIED";
 
     public static final Font GUI_FONT = new Font("TimesRoman", Font.BOLD, 20);
     public static final Color GUI_TEXT_COLOR = Color.WHITE;
     public static final Color GUI_BG_COLOR = new Color(0,0,0,150);
 
-
     public static final Font GUI_FONT_PAUSED = new Font("TimesRoman", Font.BOLD, 20);
     public static final Color GUI_COLOR_PAUSED = new Color(255,0,0,150);
+
+    public static final Color GUI_GAME_OVER_COLOR = Color.RED;
 
     public static final int SCREEN_PADDING = 10;
 
@@ -71,6 +73,8 @@ public class GUI implements IDrawable {
     private Player player;
     private int score;
 
+    private boolean gameOver = false;
+
     private BufferedImage image;
 
     public GUI(int width, int height, GL4 gl) {
@@ -87,6 +91,33 @@ public class GUI implements IDrawable {
             ig2 = image.createGraphics();
         }
 
+        if (gameOver) {
+            renderGameOver();
+        } else {
+            renderGui();
+        }
+
+        setTexture();
+    }
+
+    private void renderGameOver() {
+        ig2.setFont(GUI_FONT);
+        FontMetrics fontMetrics = ig2.getFontMetrics();
+
+        ig2.setPaint(GUI_BG_COLOR);
+        ig2.fill(new Rectangle(width, height));
+
+        ig2.setFont(GUI_FONT);
+        ig2.setPaint(GUI_GAME_OVER_COLOR);
+
+        ig2.drawString(GAME_OVER_TEXT, width / 2 - (int) fontMetrics.getStringBounds(GAME_OVER_TEXT, ig2).getWidth() / 2, height / 2 - fontMetrics.getAscent() / 2);
+
+        ig2.drawString(SOCRE_TEXT + score,
+                width / 2 - (int) fontMetrics.getStringBounds(GAME_OVER_TEXT, ig2).getWidth() / 2,
+                height / 2 + fontMetrics.getAscent() / 2);
+    }
+
+    private void renderGui() {
         ig2.setFont(GUI_FONT);
         FontMetrics fontMetrics = ig2.getFontMetrics();
         int stringHeight = fontMetrics.getAscent();
@@ -124,8 +155,6 @@ public class GUI implements IDrawable {
             bounds = fontMetrics.getStringBounds(PAUSED_TEXT, ig2);
             ig2.drawString(PAUSED_TEXT, width / 2 - (int) bounds.getWidth() / 2, height / 2 - stringHeight / 2);
         }
-
-        setTexture();
     }
 
     private List<String> buildBottomText() {
@@ -238,5 +267,9 @@ public class GUI implements IDrawable {
 
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }

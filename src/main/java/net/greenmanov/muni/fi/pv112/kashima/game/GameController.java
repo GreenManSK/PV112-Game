@@ -1,5 +1,7 @@
 package net.greenmanov.muni.fi.pv112.kashima.game;
 
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
 import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL4;
@@ -298,5 +300,23 @@ public class GameController implements GLEventListener {
 
     public LightContainer getLightContainer() {
         return mvpCanvas.getLightContainer();
+    }
+
+    public void gameOver() {
+        paused = true;
+        this.window.removeKeyListener(keyboardControls);
+        this.window.addKeyListener(new KeyListener() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                new Thread(window::destroy).start();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+        this.window.removeMouseListener(mouseControls);
+        gui.setGameOver(true);
     }
 }

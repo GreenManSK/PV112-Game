@@ -1,5 +1,6 @@
 package net.greenmanov.muni.fi.pv112.kashima.game;
 
+import net.greenmanov.muni.fi.pv112.kashima.game.enviroment.WaterPlane;
 import net.greenmanov.muni.fi.pv112.kashima.game.objects.*;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.camera.MovingCamera;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
@@ -52,8 +53,13 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
 
         fuel -= deltaTime * FUEL_PER_SECOND;
 
-        //TODO: HP & Fuel check - LOST
-        //TODO: Coords check - LOST
+        if (hp <= 0 || fuel <= 0) {
+            gameController.gameOver();
+        }
+        if (Math.abs(ship.getLight().getPosition().x) > WaterPlane.SIZE
+                || Math.abs(ship.getLight().getPosition().z) > WaterPlane.SIZE) {
+            gameController.gameOver();
+        }
     }
 
     @Override
@@ -64,7 +70,7 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     @Override
     public void onCollision(ICollisionObject object) {
         if (object instanceof AShip) {
-            //TODO: Lost
+            gameController.gameOver();
         } else if (object instanceof Rocket) {
             hp -= ROCKET_DMG;
         } else if (object instanceof Barrel) {
