@@ -33,6 +33,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
     protected int maxRocket;
     protected float rocketReloading;
     protected float rocketSpeed;
+    protected float scale = 1;
 
     protected float x = 0, y = 0;
     protected float angle;
@@ -85,13 +86,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
         }
     }
 
-    protected void changeCoords(float x, float y) {
-        object3D.getModel().translate(x - this.x, y - this.y, 0);
-        Vector4f v = new Vector4f(width / 2 - 0.2f,0,0,1).mul(object3D.getModel());
-        light.setPosition(new Vector3f(v.x, v.y, v.z));
-        this.x = x;
-        this.y = y;
-    }
+    abstract protected void changeCoords(float x, float y);
 
     /**
      * Accelerate ship by value if possible
@@ -113,9 +108,17 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
      * Turn ship by angle
      */
     public void turn(boolean positive) {
-        this.angle += (positive ? 1 : -1) * turnDelta;
-        object3D.getModel().rotateZ((positive ? 1 : -1) * turnDelta);
-        light.getDirection().rotateY((positive ? 1 : -1) * turnDelta);
+        turn(positive, 1);
+    }
+
+
+    /**
+     * Turn ship number of times
+     */
+    public void turn(boolean positive, int number) {
+        this.angle += (positive ? 1 : -1) * turnDelta * number;
+        object3D.getModel().rotateZ((positive ? 1 : -1) * turnDelta * number);
+        light.getDirection().rotateY((positive ? 1 : -1) * turnDelta * number);
     }
 
     @Override

@@ -144,9 +144,18 @@ public class GameController implements GLEventListener {
         Random rand = new Random();
         for (int i = 0; i < 10; i++) {
             AShip ship = new KingGorgeShip(
-                    (rand.nextBoolean() ? 1 : -1) + 5*rand.nextFloat(),
-                    (rand.nextBoolean() ? 1 : -1) + 5*rand.nextFloat(),
+                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
+                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
                     this);
+            ship.turn(rand.nextBoolean(), rand.nextInt(360));
+            addObject(ship);
+        }
+        for (int i = 0; i < 10; i++) {
+            AShip ship = new ChengKungFrigate(
+                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
+                    (rand.nextBoolean() ? 1 : -1) * 50*rand.nextFloat(),
+                    this);
+            ship.turn(rand.nextBoolean(), rand.nextInt(360));
             addObject(ship);
         }
 

@@ -31,7 +31,7 @@ public class GUI implements IDrawable {
     public static final String VELOCITY_TEXT = "Speed: ";
     public static final String ACCELERATION_TEXT = "Acc: ";
     public static final String ROCKETS_TEXT = "Rocks: ";
-    public static final String PAUSED_TEXT = "[Press SPACE to continue]";
+    public static final String PAUSED_TEXT = "[Press F to continue]";
     public static final String GAME_OVER_TEXT = "YOU DIED";
 
     public static final Font GUI_FONT = new Font("TimesRoman", Font.BOLD, 20);
@@ -86,10 +86,8 @@ public class GUI implements IDrawable {
     }
 
     private void createGraphics() {
-        if (image == null) {
-            image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            ig2 = image.createGraphics();
-        }
+        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        ig2 = image.createGraphics();
 
         if (gameOver) {
             renderGameOver();
