@@ -71,13 +71,14 @@ public class Player implements IGameObject, IDrawableObject, ICollisionObject {
     @Override
     public void onCollision(ICollisionObject object) {
         if (object instanceof AShip) {
-            //gameController.gameOver();
             hp -= ROCKET_DMG;
         } else if (object instanceof Rocket) {
             hp -= ROCKET_DMG;
         } else if (object instanceof Barrel) {
+            SoundBoard.play(SoundBoard.BONUS_SOUND);
             fuel = Math.min(MAX_FUEL, fuel + ((Barrel) object).getCapacity());
         } else if (object instanceof Wrench) {
+            SoundBoard.play(SoundBoard.BONUS_SOUND);
             hp = Math.min(MAX_HP, hp + ((Wrench) object).getCapacity());
         }
     }

@@ -1,6 +1,7 @@
 package net.greenmanov.muni.fi.pv112.kashima.game.objects;
 
 import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
+import net.greenmanov.muni.fi.pv112.kashima.game.SoundBoard;
 import net.greenmanov.muni.fi.pv112.kashima.game.enviroment.WaterPlane;
 import net.greenmanov.muni.fi.pv112.kashima.lights.SpotLight;
 import net.greenmanov.muni.fi.pv112.kashima.materials.Materials;
@@ -86,6 +87,7 @@ public class Rocket implements IGameObject, IDrawableObject, ICollisionObject  {
 
     @Override
     public void onCollision(ICollisionObject object) {
+        SoundBoard.play(SoundBoard.EXPLOSION_SOUND);
         destroy();
     }
 

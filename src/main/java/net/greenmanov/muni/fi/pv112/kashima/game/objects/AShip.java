@@ -2,6 +2,7 @@ package net.greenmanov.muni.fi.pv112.kashima.game.objects;
 
 import net.greenmanov.muni.fi.pv112.kashima.game.GameController;
 import net.greenmanov.muni.fi.pv112.kashima.game.Player;
+import net.greenmanov.muni.fi.pv112.kashima.game.SoundBoard;
 import net.greenmanov.muni.fi.pv112.kashima.lights.SpotLight;
 import net.greenmanov.muni.fi.pv112.kashima.opengl.drawable.Object3D;
 import org.joml.Vector3f;
@@ -152,6 +153,9 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
         if (object instanceof Player || object instanceof Rocket) {
             gameController.addScore(scoreValue);
         }
+        if (object instanceof AShip || object instanceof Player) {
+            SoundBoard.play(SoundBoard.EXPLOSION_SOUND);
+        }
         destroy();
     }
 
@@ -185,6 +189,7 @@ abstract public class AShip implements IGameObject, IDrawableObject, ICollisionO
                     rocketSpeed,
                     gameController);
             gameController.addObject(rocket);
+            SoundBoard.play(SoundBoard.SHOOT_SOUND);
         }
     }
 
