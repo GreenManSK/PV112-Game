@@ -39,7 +39,7 @@ public class GUI implements IDrawable {
     public static final Color GUI_BG_COLOR = new Color(0,0,0,150);
 
     public static final Font GUI_FONT_PAUSED = new Font("TimesRoman", Font.BOLD, 20);
-    public static final Color GUI_COLOR_PAUSED = new Color(255,0,0,150);
+    public static final Color GUI_COLOR_PAUSED = new Color(255,255,255,255);
 
     public static final Color GUI_GAME_OVER_COLOR = Color.RED;
 
@@ -146,13 +146,21 @@ public class GUI implements IDrawable {
         }
 
         if (gameController != null && gameController.isPaused()) {
-            ig2.setFont(GUI_FONT_PAUSED);
-            ig2.setPaint(GUI_COLOR_PAUSED);
-            fontMetrics = ig2.getFontMetrics();
-            stringHeight = fontMetrics.getAscent();
-            bounds = fontMetrics.getStringBounds(PAUSED_TEXT, ig2);
-            ig2.drawString(PAUSED_TEXT, width / 2 - (int) bounds.getWidth() / 2, height / 2 - stringHeight / 2);
+            showPausedScreen();
         }
+    }
+
+    private void showPausedScreen() {
+        ig2.setFont(GUI_FONT_PAUSED);
+        ig2.setPaint(GUI_COLOR_PAUSED);
+        FontMetrics fontMetrics = ig2.getFontMetrics();
+        int stringHeight = fontMetrics.getAscent();
+
+        Rectangle2D bounds;
+
+        bounds = fontMetrics.getStringBounds(PAUSED_TEXT, ig2);
+        ig2.drawString(PAUSED_TEXT, width / 2 - (int) bounds.getWidth() / 2, height / 2 - stringHeight / 2);
+
     }
 
     private List<String> buildBottomText() {

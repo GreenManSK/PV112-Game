@@ -35,7 +35,6 @@ public class KeyboardControls implements KeyListener {
                 new Thread(window::destroy).start();
                 break;
             case FULLSCREEN_KEY:
-                window.confinePointer(!window.isPointerConfined());
                 window.setFullscreen(!window.isFullscreen());
                 break;
             case PAUSE_BUTTON:

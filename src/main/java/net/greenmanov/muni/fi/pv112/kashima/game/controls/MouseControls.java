@@ -14,6 +14,8 @@ import java.awt.*;
  */
 public class MouseControls implements MouseListener {
 
+    private static final int WINDOW_BORDER = 5;
+
     private MovingCamera camera, saveCamera;
 
     private boolean firstMouse = true;
@@ -93,7 +95,7 @@ public class MouseControls implements MouseListener {
     }
 
     private void fixMousePosition(int x, int y) {
-        if (x > 0 && x < window.getWidth() && y > 0 && y < window.getHeight())
+        if (x > WINDOW_BORDER && x < window.getWidth() - WINDOW_BORDER && y > WINDOW_BORDER && y < window.getHeight() - WINDOW_BORDER)
             return;
         saveCamera = camera;
         camera = null;

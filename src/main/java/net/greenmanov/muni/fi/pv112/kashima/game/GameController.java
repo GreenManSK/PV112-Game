@@ -74,6 +74,7 @@ public class GameController implements GLEventListener {
     public GameController(GLWindow window) {
         this.window = window;
         this.collisionDetector = new CollisionDetector();
+        paused = true;
     }
 
     public void addObject(IGameObject object) {
