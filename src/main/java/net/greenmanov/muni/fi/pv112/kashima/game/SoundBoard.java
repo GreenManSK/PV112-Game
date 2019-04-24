@@ -1,9 +1,7 @@
 package net.greenmanov.muni.fi.pv112.kashima.game;
 
-import net.greenmanov.muni.fi.pv112.kashima.MainOld;
-
 import javax.sound.sampled.*;
-import java.io.IOException;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,7 +25,9 @@ final public class SoundBoard {
     public static void play(String path) {
         try (
                 InputStream stream = ClassLoader.getSystemResourceAsStream(path);
-                AudioInputStream audioStream = AudioSystem.getAudioInputStream(stream)) {
+                InputStream bufferedIn = new BufferedInputStream(stream);
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(bufferedIn)
+        ) {
             AudioFormat format = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(Clip.class, format);
             Clip clip = (Clip) AudioSystem.getLine(info);
